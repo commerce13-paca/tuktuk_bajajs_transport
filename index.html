@@ -2268,6 +2268,145 @@
                 font-size: 20px;
             }
         }
+        
+        /* ===== NOUVELLES CLASSES POUR MESSAGERIE ET PRODUITS ===== */
+        .user-chat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .user-chat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .user-chat-card.unread {
+            background: rgba(0, 122, 255, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .chat-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .product-detail-image {
+            width: 100%;
+            height: 200px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #000;
+            margin-bottom: var(--space-md);
+        }
+        
+        .product-detail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-detail-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: var(--space-md);
+        }
+        
+        .product-detail-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+        
+        .product-meta-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+        
+        .product-meta-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        
+        .product-meta-value {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .edit-product-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            margin-left: auto;
+        }
+        
+        .admin-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+        
+        .admin-product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            border: 1px solid var(--border);
+        }
+        
+        .admin-product-image {
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(135deg, var(--shop-primary), var(--shop-secondary));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: var(--space-sm);
+            overflow: hidden;
+        }
+        
+        .admin-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .admin-product-actions {
+            display: flex;
+            gap: 4px;
+            margin-top: var(--space-sm);
+        }
     </style>
 </head>
 <body>
@@ -2311,9 +2450,10 @@
                 <span>Boutique</span>
                 <span class="nav-badge hidden" id="shop-badge">0</span>
             </button>
-            <button class="nav-tab" data-page="map">
-                <i class="fas fa-map"></i>
-                <span>Carte</span>
+            <button class="nav-tab" data-page="messages">
+                <i class="fas fa-comments"></i>
+                <span>Messages</span>
+                <span class="nav-badge hidden" id="messages-badge">0</span>
             </button>
             <button class="nav-tab" data-page="social">
                 <i class="fas fa-users"></i>
@@ -2377,12 +2517,12 @@
                                 <div class="ride-type-name">Boutique</div>
                                 <div class="ride-type-price">Livraison rapide</div>
                             </div>
-                            <div class="ride-type" onclick="showPage('map')">
+                            <div class="ride-type" onclick="showPage('messages')">
                                 <div class="ride-type-icon">
-                                    <i class="fas fa-map-marker-alt"></i>
+                                    <i class="fas fa-comments"></i>
                                 </div>
-                                <div class="ride-type-name">Carte Live</div>
-                                <div class="ride-type-price">Suivi en temps réel</div>
+                                <div class="ride-type-name">Messages</div>
+                                <div class="ride-type-price">Chat en direct</div>
                             </div>
                         </div>
                     </div>
@@ -2643,6 +2783,35 @@
                                 <i class="fas fa-credit-card"></i>
                                 Commander maintenant
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PAGE MESSAGES -->
+            <div id="messages-page" class="page">
+                <div class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-comments"></i>
+                                <span>Messages</span>
+                            </div>
+                            <button class="btn btn-sm btn-primary" onclick="startNewConversation()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        
+                        <div id="conversations-list">
+                            <!-- Conversations -->
+                            <div class="text-center text-muted p-4">
+                                <i class="fas fa-comments" style="font-size: 36px; margin-bottom: var(--space-sm);"></i>
+                                <div>Aucune conversation</div>
+                                <button class="btn btn-primary mt-3" onclick="startNewConversation()">
+                                    <i class="fas fa-plus"></i>
+                                    Nouvelle conversation
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2916,6 +3085,10 @@
                                     <i class="fas fa-car"></i>
                                     Chauffeurs
                                 </div>
+                                <div class="admin-tab" onclick="showAdminTab('products')">
+                                    <i class="fas fa-box"></i>
+                                    Produits
+                                </div>
                                 <div class="admin-tab" onclick="showAdminTab('orders')">
                                     <i class="fas fa-shopping-cart"></i>
                                     Commandes
@@ -2938,12 +3111,12 @@
                                         <div class="stat-label">Chauffeurs</div>
                                     </div>
                                     <div class="stat-card">
-                                        <div class="stat-number" id="admin-total-orders">0</div>
-                                        <div class="stat-label">Commandes</div>
+                                        <div class="stat-number" id="admin-total-products">0</div>
+                                        <div class="stat-label">Produits</div>
                                     </div>
                                     <div class="stat-card">
-                                        <div class="stat-number" id="admin-total-posts">0</div>
-                                        <div class="stat-label">Publications</div>
+                                        <div class="stat-number" id="admin-total-orders">0</div>
+                                        <div class="stat-label">Commandes</div>
                                     </div>
                                 </div>
 
@@ -3002,6 +3175,17 @@
                                             <!-- Chauffeurs -->
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+
+                            <!-- Gestion Produits -->
+                            <div class="admin-section" id="admin-products">
+                                <button class="btn btn-admin btn-block mb-3" onclick="showAddProductModal()">
+                                    <i class="fas fa-plus"></i>
+                                    Ajouter un produit
+                                </button>
+                                <div class="admin-products-grid" id="admin-products-grid">
+                                    <!-- Produits -->
                                 </div>
                             </div>
 
@@ -3074,7 +3258,7 @@
                 <i class="fas fa-phone"></i>
                 Appeler
             </button>
-            <button class="ride-action-btn message" onclick="openMessages()">
+            <button class="ride-action-btn message" onclick="openChatWithDriver()">
                 <i class="fas fa-comment"></i>
                 Message
             </button>
@@ -3091,7 +3275,7 @@
             <div class="modal-header">
                 <div class="card-title">
                     <i class="fas fa-comments"></i>
-                    <span>Messages</span>
+                    <span id="chat-title">Messages</span>
                 </div>
                 <button class="modal-close" onclick="closeMessagesModal()">
                     <i class="fas fa-times"></i>
@@ -3105,10 +3289,41 @@
             </div>
             
             <div class="message-input-container">
-                <input type="text" class="message-input" id="message-input" placeholder="Tapez votre message...">
+                <input type="text" class="message-input" id="message-input" placeholder="Tapez votre message..." onkeypress="if(event.key === 'Enter') sendMessage()">
                 <button class="message-send-btn" onclick="sendMessage()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL NOUVELLE CONVERSATION -->
+    <div id="new-conversation-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="card-title">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Nouvelle conversation</span>
+                </div>
+                <button class="modal-close" onclick="closeNewConversationModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="input-group mb-3">
+                <label class="input-label">
+                    <i class="fas fa-search"></i>
+                    Rechercher un utilisateur
+                </label>
+                <input type="text" 
+                       class="input-field" 
+                       id="search-user-input"
+                       placeholder="Nom, email ou téléphone..."
+                       oninput="searchUsersForChat(this.value)">
+            </div>
+            
+            <div id="search-results" style="max-height: 300px; overflow-y: auto;">
+                <!-- Résultats de recherche -->
             </div>
         </div>
     </div>
@@ -3305,10 +3520,16 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-primary mt-3" id="follow-btn" onclick="toggleFollow()">
-                    <i class="fas fa-user-plus"></i>
-                    S'abonner
-                </button>
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-primary flex-1" onclick="startChatWithUser()">
+                        <i class="fas fa-comment"></i>
+                        Message
+                    </button>
+                    <button class="btn flex-1" id="follow-btn" onclick="toggleFollow()">
+                        <i class="fas fa-user-plus"></i>
+                        Suivre
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -3559,40 +3780,40 @@
         </div>
     </div>
 
-    <!-- MODAL DÉTAILS PRODUIT PARTENAIRE -->
-    <div id="partner-product-modal" class="modal-overlay hidden">
+    <!-- MODAL DÉTAILS PRODUIT -->
+    <div id="product-detail-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="card-title">
-                    <i class="fas fa-handshake"></i>
-                    <span id="partner-product-title">Produit Partenaire</span>
+                    <i class="fas fa-info-circle"></i>
+                    <span id="product-detail-title">Détails du produit</span>
                 </div>
-                <button class="modal-close" onclick="closePartnerProductModal()">
+                <button class="modal-close" onclick="closeProductDetailModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div id="partner-product-content">
-                <!-- Détails du produit partenaire -->
+            <div id="product-detail-content">
+                <!-- Détails du produit -->
             </div>
         </div>
     </div>
 
-    <!-- MODAL ADMIN -->
-    <div id="admin-modal" class="modal-overlay hidden">
+    <!-- MODAL AJOUTER/MODIFIER PRODUIT -->
+    <div id="edit-product-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="card-title">
-                    <i class="fas fa-crown"></i>
-                    <span id="admin-modal-title">Administration</span>
+                    <i class="fas fa-box"></i>
+                    <span id="edit-product-title">Ajouter un produit</span>
                 </div>
-                <button class="modal-close" onclick="closeAdminModal()">
+                <button class="modal-close" onclick="closeEditProductModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div id="admin-modal-content">
-                <!-- Contenu admin -->
+            <div id="edit-product-form">
+                <!-- Formulaire produit -->
             </div>
         </div>
     </div>
@@ -3685,18 +3906,24 @@
             adminData: {
                 users: [],
                 drivers: [],
+                products: [],
                 orders: [],
                 posts: [],
                 stats: {
                     totalUsers: 0,
                     totalDrivers: 0,
+                    totalProducts: 0,
                     totalOrders: 0,
                     totalPosts: 0,
                     todayOrders: 0,
                     todayRevenue: 0,
                     activeUsers: 0
                 }
-            }
+            },
+            // Nouveaux états pour la messagerie
+            conversations: [],
+            currentConversation: null,
+            unreadMessages: 0
         };
 
         // ===== DONNÉES SIMULÉES =====
@@ -3705,7 +3932,7 @@
             {
                 id: 1,
                 name: "Pizza VTC",
-                description: "Pizza grande avec tous les ingrédients",
+                description: "Pizza grande avec tous les ingrédients. Préparée avec des produits frais locaux. Livraison rapide garantie.",
                 price: 15000,
                 category: 'food',
                 image: '🍕',
@@ -3713,12 +3940,19 @@
                 featured: true,
                 preparationTime: 20,
                 stock: 50,
-                partner: null
+                partner: null,
+                details: {
+                    ingredients: ["Pâte à pizza", "Sauce tomate", "Fromage", "Champignons", "Jambon", "Olives"],
+                    calories: "850 kcal",
+                    weight: "400g",
+                    allergens: ["Gluten", "Lactose"]
+                },
+                images: ['🍕', 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=400&h=300&fit=crop']
             },
             {
                 id: 2,
                 name: "Burger Mahajanga",
-                description: "Burger avec viande locale et frites",
+                description: "Burger avec viande locale et frites croustillantes. Servi avec sauce spéciale maison.",
                 price: 12000,
                 category: 'food',
                 image: '🍔',
@@ -3726,12 +3960,19 @@
                 featured: false,
                 preparationTime: 15,
                 stock: 30,
-                partner: null
+                partner: null,
+                details: {
+                    ingredients: ["Pain burger", "Steak de bœuf", "Fromage", "Salade", "Tomate", "Sauce maison"],
+                    calories: "720 kcal",
+                    weight: "350g",
+                    allergens: ["Gluten", "Lactose"]
+                },
+                images: ['🍔', 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop']
             },
             {
                 id: 3,
                 name: "Salade Fraîche",
-                description: "Salade composée avec légumes frais",
+                description: "Salade composée avec légumes frais du marché. Vinaigrette légère au citron.",
                 price: 8000,
                 category: 'food',
                 image: '🥗',
@@ -3739,12 +3980,19 @@
                 featured: false,
                 preparationTime: 10,
                 stock: 25,
-                partner: null
+                partner: null,
+                details: {
+                    ingredients: ["Laitue", "Tomates cerises", "Concombre", "Carottes", "Avocat", "Vinaigrette citron"],
+                    calories: "320 kcal",
+                    weight: "300g",
+                    allergens: ["Aucun"]
+                },
+                images: ['🥗', 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop']
             },
             {
                 id: 4,
                 name: "Café Premium",
-                description: "Café arabica de qualité supérieure",
+                description: "Café arabica de qualité supérieure. Torréfaction locale. Servi chaud ou glacé.",
                 price: 3000,
                 category: 'food',
                 image: '☕',
@@ -3752,13 +4000,20 @@
                 featured: true,
                 preparationTime: 5,
                 stock: 100,
-                partner: null
+                partner: null,
+                details: {
+                    ingredients: ["Café arabica", "Eau", "Sucre (optionnel)", "Lait (optionnel)"],
+                    calories: "5 kcal",
+                    volume: "250ml",
+                    allergens: ["Aucun"]
+                },
+                images: ['☕', 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop']
             },
             // Accessoires
             {
                 id: 5,
                 name: "Chargeur USB Voiture",
-                description: "Chargeur rapide 2 ports pour voiture",
+                description: "Chargeur rapide 2 ports pour voiture. Compatible avec tous les smartphones. Sécurité garantie.",
                 price: 25000,
                 category: 'accessories',
                 image: '🔌',
@@ -3766,12 +4021,19 @@
                 featured: true,
                 preparationTime: 0,
                 stock: 20,
-                partner: null
+                partner: null,
+                details: {
+                    specifications: ["2 ports USB", "Charge rapide 3.0", "Protection surtension", "Câble inclus"],
+                    power: "24W",
+                    compatibility: "Tous smartphones",
+                    warranty: "1 an"
+                },
+                images: ['🔌', 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop']
             },
             {
                 id: 6,
                 name: "Support Téléphone",
-                description: "Support pour GPS et téléphone",
+                description: "Support universel pour GPS et téléphone. Installation facile sur tableau de bord ou ventilation.",
                 price: 15000,
                 category: 'accessories',
                 image: '📱',
@@ -3779,13 +4041,20 @@
                 featured: false,
                 preparationTime: 0,
                 stock: 35,
-                partner: null
+                partner: null,
+                details: {
+                    specifications: ["Support universel", "Rotation 360°", "Installation ventouse/grille"],
+                    material: "Plastique ABS",
+                    compatibility: "Tous téléphones 4-7 pouces",
+                    warranty: "6 mois"
+                },
+                images: ['📱', 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop']
             },
             // Produits Partenaires
             {
                 id: 7,
                 name: "Pack Partenaire Gold",
-                description: "Abonnement premium avec avantages exclusifs",
+                description: "Abonnement premium avec avantages exclusifs pour les chauffeurs VTC. Augmentez vos revenus !",
                 price: 50000,
                 category: 'partners',
                 image: '🏆',
@@ -3797,14 +4066,23 @@
                 benefits: [
                     "10% de réduction sur toutes les courses",
                     "Livraison gratuite",
-                    "Support prioritaire",
-                    "Accès aux événements exclusifs"
-                ]
+                    "Support prioritaire 24/7",
+                    "Accès aux événements exclusifs",
+                    "Formations gratuites",
+                    "Assistance juridique"
+                ],
+                details: {
+                    duration: "1 mois",
+                    renewal: "Automatique",
+                    cancellation: "À tout moment",
+                    conditions: ["Pour chauffeurs actifs", "Minimum 20 courses/mois"]
+                },
+                images: ['🏆', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop']
             },
             {
                 id: 8,
                 name: "Formation Chauffeur Pro",
-                description: "Formation certifiée pour chauffeurs VTC",
+                description: "Formation certifiée pour chauffeurs VTC. Développez vos compétences et augmentez vos revenus.",
                 price: 150000,
                 category: 'partners',
                 image: '📚',
@@ -3814,16 +4092,24 @@
                 stock: 50,
                 partner: "Académie VTC",
                 benefits: [
-                    "Certification reconnue",
+                    "Certification reconnue nationalement",
                     "Support après formation",
-                    "Accès à la communauté",
-                    "Placement garanti"
-                ]
+                    "Accès à la communauté exclusive",
+                    "Placement garanti chez nos partenaires",
+                    "Manuel du chauffeur professionnel"
+                ],
+                details: {
+                    duration: "3 jours",
+                    format: "Présentiel/En ligne",
+                    certificate: "Oui, reconnu",
+                    prerequisites: ["Permis B valide", "Casier judiciaire vierge"]
+                },
+                images: ['📚', 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop']
             },
             {
                 id: 9,
                 name: "Assurance Véhicule",
-                description: "Assurance tous risques pour chauffeurs",
+                description: "Assurance tous risques pour chauffeurs VTC. Couverture complète et assistance 24/7.",
                 price: 300000,
                 category: 'partners',
                 image: '🛡️',
@@ -3833,11 +4119,19 @@
                 stock: 30,
                 partner: "AssurMad",
                 benefits: [
-                    "Couverture complète",
-                    "Assistance 24/7",
-                    "Dépannage rapide",
-                    "Garantie à l'étranger"
-                ]
+                    "Couverture complète tous risques",
+                    "Assistance 24h/24 et 7j/7",
+                    "Dépannage rapide sur toute l'île",
+                    "Garantie à l'étranger",
+                    "Remboursement sous 48h"
+                ],
+                details: {
+                    coverage: ["Responsabilité civile", "Dommages collision", "Vol", "Incendie", "Assistance"],
+                    duration: "1 an",
+                    franchise: "50 000 Ar",
+                    extensions: ["Passagers", "Bagages"]
+                },
+                images: ['🛡️', 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop']
             }
         ];
 
@@ -4111,15 +4405,13 @@
             renderProducts();
             renderPosts();
             renderDriversList();
+            renderConversations();
             
             // Démarrer les mises à jour en temps réel
             startRealTimeUpdates();
             
             // Vérifier la géolocalisation
             checkGeolocation();
-            
-            // Simuler des messages
-            simulateMessages();
             
             // Initialiser les vidéos
             setTimeout(initVideoPlayers, 500);
@@ -4133,13 +4425,20 @@
             AppState.news = SAMPLE_NEWS;
             AppState.adminData.users = SAMPLE_USERS;
             AppState.adminData.drivers = SAMPLE_DRIVERS;
+            AppState.adminData.products = SAMPLE_PRODUCTS;
             AppState.adminData.posts = SAMPLE_POSTS;
             
             // Charger depuis localStorage
             loadFromLocalStorage();
             
+            // Initialiser les conversations
+            if (AppState.conversations.length === 0) {
+                initializeConversations();
+            }
+            
             updateNotifications();
             updateAdminStats();
+            updateMessagesBadge();
         }
 
         function loadFromLocalStorage() {
@@ -4192,6 +4491,17 @@
                     console.error('Erreur chargement utilisateur:', e);
                 }
             }
+            
+            // Conversations
+            const savedConversations = localStorage.getItem('vtc_conversations');
+            if (savedConversations) {
+                try {
+                    AppState.conversations = JSON.parse(savedConversations);
+                } catch (e) {
+                    console.error('Erreur chargement conversations:', e);
+                    AppState.conversations = [];
+                }
+            }
         }
 
         function saveToLocalStorage() {
@@ -4202,6 +4512,7 @@
             if (AppState.currentUser) {
                 localStorage.setItem('vtc_user', JSON.stringify(AppState.currentUser));
             }
+            localStorage.setItem('vtc_conversations', JSON.stringify(AppState.conversations));
         }
 
         // ===== PWA FUNCTIONALITY =====
@@ -4509,7 +4820,7 @@
             
             return `
                 <div class="product-card ${product.featured ? 'featured' : ''} ${isPartner ? 'partner-product' : ''}" 
-                     onclick="${isPartner ? `showPartnerProductDetail(${product.id})` : `showProductDetail(${product.id})`}">
+                     onclick="showProductDetail(${product.id})">
                     ${badgeText ? `<div class="${badgeClass}">${badgeText}</div>` : ''}
                     <div class="${imageClass}">
                         ${product.image}
@@ -4558,144 +4869,217 @@
             const product = AppState.products.find(p => p.id === productId);
             if (!product) return;
             
-            const modalHTML = `
-                <div class="modal-overlay" id="product-modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <div class="card-title">
-                                <i class="fas fa-info-circle"></i>
-                                <span>${product.name}</span>
-                            </div>
-                            <button class="modal-close" onclick="closeProductModal()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="text-center mb-4">
-                            <div class="product-image" style="width: 100px; height: 100px; margin: 0 auto;">
-                                ${product.image}
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <h3>${product.name}</h3>
-                            <p class="text-muted">${product.description}</p>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between">
-                                <span>Prix:</span>
-                                <span class="product-price">${formatPrice(product.price)}</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <span>Note:</span>
-                                <span class="product-rating">
-                                    ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
-                                    (${product.rating})
-                                </span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <span>Temps de préparation:</span>
-                                <span>${product.preparationTime} min</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <span>Stock:</span>
-                                <span>${product.stock} unités</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-shop btn-block" onclick="addToCart(${product.id}); closeProductModal();">
-                            <i class="fas fa-cart-plus"></i>
-                            Ajouter au panier
-                        </button>
-                    </div>
-                </div>
-            `;
+            document.getElementById('product-detail-title').textContent = product.name;
             
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-        }
-
-        function showPartnerProductDetail(productId) {
-            const product = AppState.products.find(p => p.id === productId);
-            if (!product) return;
+            const content = document.getElementById('product-detail-content');
             
-            document.getElementById('partner-product-title').textContent = product.name;
+            const isPartner = product.category === 'partners';
+            const priceClass = isPartner ? 'product-price partner' : 'product-price';
             
-            const content = document.getElementById('partner-product-content');
+            let detailsHTML = '';
+            if (product.details) {
+                if (product.category === 'food') {
+                    detailsHTML = `
+                        <div class="product-detail-meta">
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Calories</div>
+                                <div class="product-meta-value">${product.details.calories || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Poids</div>
+                                <div class="product-meta-value">${product.details.weight || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Préparation</div>
+                                <div class="product-meta-value">${product.preparationTime} min</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Stock</div>
+                                <div class="product-meta-value">${product.stock} unités</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="fas fa-list"></i>
+                                    <span>Ingrédients</span>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                ${product.details.ingredients ? product.details.ingredients.map(ing => `
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-check-circle" style="color: var(--success); font-size: 12px;"></i>
+                                        <span>${ing}</span>
+                                    </div>
+                                `).join('') : 'Aucune information'}
+                            </div>
+                        </div>
+                        
+                        ${product.details.allergens ? `
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Allergènes</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    ${product.details.allergens.map(allergen => `
+                                        <span class="order-status status-pending" style="margin-right: 8px; margin-bottom: 8px; display: inline-block;">
+                                            ${allergen}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    `;
+                } else if (product.category === 'accessories') {
+                    detailsHTML = `
+                        <div class="product-detail-meta">
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Garantie</div>
+                                <div class="product-meta-value">${product.details.warranty || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Puissance</div>
+                                <div class="product-meta-value">${product.details.power || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Compatibilité</div>
+                                <div class="product-meta-value">${product.details.compatibility || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Stock</div>
+                                <div class="product-meta-value">${product.stock} unités</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="fas fa-list"></i>
+                                    <span>Spécifications</span>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                ${product.details.specifications ? product.details.specifications.map(spec => `
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-check" style="color: var(--primary); font-size: 12px;"></i>
+                                        <span>${spec}</span>
+                                    </div>
+                                `).join('') : 'Aucune information'}
+                            </div>
+                        </div>
+                    `;
+                } else if (product.category === 'partners') {
+                    detailsHTML = `
+                        <div class="product-detail-meta">
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Durée</div>
+                                <div class="product-meta-value">${product.details.duration || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Renouvellement</div>
+                                <div class="product-meta-value">${product.details.renewal || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Annulation</div>
+                                <div class="product-meta-value">${product.details.cancellation || 'N/A'}</div>
+                            </div>
+                            <div class="product-meta-item">
+                                <div class="product-meta-label">Stock</div>
+                                <div class="product-meta-value">${product.stock} unités</div>
+                            </div>
+                        </div>
+                        
+                        ${product.benefits ? `
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <i class="fas fa-gift"></i>
+                                        <span>Avantages inclus</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    ${product.benefits.map(benefit => `
+                                        <div class="benefit-item mb-2">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>${benefit}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${product.details.conditions ? `
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <i class="fas fa-clipboard-check"></i>
+                                        <span>Conditions</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    ${product.details.conditions.map(condition => `
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fas fa-info-circle" style="color: var(--warning); font-size: 12px;"></i>
+                                            <span>${condition}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    `;
+                }
+            }
+            
             content.innerHTML = `
-                <div class="text-center mb-4">
-                    <div class="product-image partner" style="width: 120px; height: 120px; margin: 0 auto; font-size: 48px;">
-                        ${product.image}
-                        <div class="partner-badge">
-                            <i class="fas fa-handshake"></i> ${product.partner}
-                        </div>
-                    </div>
+                <div class="product-detail-image">
+                    ${product.image}
                 </div>
                 
                 <div class="mb-4">
                     <h3>${product.name}</h3>
-                    <p class="text-muted">${product.description}</p>
-                </div>
-                
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Prix:</span>
-                        <span class="product-price partner" style="font-size: 24px;">${formatPrice(product.price)}</span>
+                    <div class="product-detail-description">
+                        ${product.description}
                     </div>
                     
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Note:</span>
-                        <span class="product-rating">
-                            ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
-                            (${product.rating})
-                        </span>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Stock:</span>
-                        <span>${product.stock} unités disponibles</span>
-                    </div>
-                </div>
-                
-                ${product.benefits ? `
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-gift"></i>
-                                <span>Avantages inclus</span>
+                        <div>
+                            <div class="${priceClass}" style="font-size: 24px;">${formatPrice(product.price)}</div>
+                            <div class="product-rating">
+                                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                                (${product.rating})
                             </div>
                         </div>
-                        <div class="p-3">
-                            ${product.benefits.map(benefit => `
-                                <div class="benefit-item mb-2">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>${benefit}</span>
-                                </div>
-                            `).join('')}
+                        <div class="text-muted">
+                            ${product.preparationTime > 0 ? `Préparation: ${product.preparationTime} min` : 'Disponible immédiatement'}
                         </div>
                     </div>
-                ` : ''}
+                </div>
+                
+                ${detailsHTML}
                 
                 <div class="d-flex gap-2">
-                    <button class="btn btn-partner flex-1" onclick="addToCart(${product.id}); closePartnerProductModal();">
+                    <button class="btn ${isPartner ? 'btn-partner' : 'btn-shop'} flex-1" onclick="addToCart(${product.id}); closeProductDetailModal();">
                         <i class="fas fa-cart-plus"></i>
                         Ajouter au panier
                     </button>
-                    <button class="btn btn-primary flex-1" onclick="closePartnerProductModal(); showPage('home');">
-                        <i class="fas fa-home"></i>
-                        Accueil
-                    </button>
+                    ${AppState.isAdmin ? `
+                        <button class="btn btn-warning flex-1" onclick="editProduct(${product.id})">
+                            <i class="fas fa-edit"></i>
+                            Modifier
+                        </button>
+                    ` : ''}
                 </div>
             `;
             
-            document.getElementById('partner-product-modal').classList.remove('hidden');
+            document.getElementById('product-detail-modal').classList.remove('hidden');
         }
 
-        function closePartnerProductModal() {
-            document.getElementById('partner-product-modal').classList.add('hidden');
-        }
-
-        function closeProductModal() {
-            const modal = document.getElementById('product-modal');
-            if (modal) {
-                modal.remove();
-            }
+        function closeProductDetailModal() {
+            document.getElementById('product-detail-modal').classList.add('hidden');
         }
 
         function addToCart(productId) {
@@ -5504,6 +5888,415 @@
             }
         }
 
+        // ===== MESSAGERIE FUNCTIONS =====
+        function initializeConversations() {
+            if (AppState.currentUser) {
+                // Créer des conversations de démonstration
+                AppState.conversations = [
+                    {
+                        id: 1,
+                        userId: 2, // Marie Ravao
+                        userName: "Marie Ravao",
+                        userAvatar: "👩",
+                        lastMessage: "Bonjour ! Je suis en route pour vous prendre.",
+                        lastMessageTime: "10:30",
+                        unread: 2,
+                        messages: [
+                            {
+                                id: 1,
+                                senderId: 2,
+                                text: "Bonjour ! Je suis disponible pour une course.",
+                                time: "10:15",
+                                read: true
+                            },
+                            {
+                                id: 2,
+                                senderId: AppState.currentUser.id,
+                                text: "Parfait, j'ai besoin d'aller à l'aéroport.",
+                                time: "10:20",
+                                read: true
+                            },
+                            {
+                                id: 3,
+                                senderId: 2,
+                                text: "D'accord, j'arrive dans 5 minutes.",
+                                time: "10:25",
+                                read: true
+                            },
+                            {
+                                id: 4,
+                                senderId: 2,
+                                text: "Bonjour ! Je suis en route pour vous prendre.",
+                                time: "10:30",
+                                read: false
+                            }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        userId: 4, // Admin VTC
+                        userName: "Admin VTC",
+                        userAvatar: "👑",
+                        lastMessage: "Votre compte a été vérifié avec succès.",
+                        lastMessageTime: "Hier",
+                        unread: 0,
+                        messages: [
+                            {
+                                id: 1,
+                                senderId: 4,
+                                text: "Bienvenue sur VTC Mahajanga !",
+                                time: "2024-12-19 09:00",
+                                read: true
+                            },
+                            {
+                                id: 2,
+                                senderId: AppState.currentUser.id,
+                                text: "Merci ! Comment fonctionne la boutique ?",
+                                time: "2024-12-19 09:15",
+                                read: true
+                            },
+                            {
+                                id: 3,
+                                senderId: 4,
+                                text: "Vous pouvez commander de la nourriture et des accessoires. Livraison rapide !",
+                                time: "2024-12-19 09:30",
+                                read: true
+                            },
+                            {
+                                id: 4,
+                                senderId: 4,
+                                text: "Votre compte a été vérifié avec succès.",
+                                time: "2024-12-19 14:00",
+                                read: true
+                            }
+                        ]
+                    }
+                ];
+                saveToLocalStorage();
+            }
+        }
+
+        function renderConversations() {
+            const container = document.getElementById('conversations-list');
+            if (!container) return;
+            
+            if (AppState.conversations.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted p-4">
+                        <i class="fas fa-comments" style="font-size: 36px; margin-bottom: var(--space-sm);"></i>
+                        <div>Aucune conversation</div>
+                        <button class="btn btn-primary mt-3" onclick="startNewConversation()">
+                            <i class="fas fa-plus"></i>
+                            Nouvelle conversation
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            AppState.conversations.forEach(conversation => {
+                const conversationElement = document.createElement('div');
+                conversationElement.className = `user-chat-card ${conversation.unread > 0 ? 'unread' : ''}`;
+                conversationElement.onclick = () => openConversation(conversation.id);
+                
+                conversationElement.innerHTML = `
+                    <div class="user-avatar" style="width: 50px; height: 50px; font-size: 20px;">
+                        ${conversation.userAvatar}
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-weight: 600; font-size: 14px;">${conversation.userName}</div>
+                            <div style="font-size: 10px; color: var(--text-secondary);">${conversation.lastMessageTime}</div>
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${conversation.lastMessage}
+                        </div>
+                    </div>
+                    ${conversation.unread > 0 ? `
+                        <div class="chat-badge">${conversation.unread}</div>
+                    ` : ''}
+                `;
+                container.appendChild(conversationElement);
+            });
+            
+            updateMessagesBadge();
+        }
+
+        function openConversation(conversationId) {
+            const conversation = AppState.conversations.find(c => c.id === conversationId);
+            if (!conversation) return;
+            
+            AppState.currentConversation = conversation;
+            document.getElementById('chat-title').textContent = conversation.userName;
+            
+            // Marquer les messages comme lus
+            conversation.unread = 0;
+            saveToLocalStorage();
+            updateMessagesBadge();
+            
+            // Afficher les messages
+            const messagesList = document.getElementById('messages-list');
+            messagesList.innerHTML = '';
+            
+            conversation.messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                const isCurrentUser = message.senderId === AppState.currentUser?.id;
+                messageElement.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
+                
+                if (!isCurrentUser) {
+                    const user = AppState.users.find(u => u.id === message.senderId);
+                    messageElement.innerHTML = `
+                        <div class="message-sender">${user ? user.name : 'Utilisateur'}</div>
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-time">${message.time}</div>
+                    `;
+                } else {
+                    messageElement.innerHTML = `
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-time">${message.time}</div>
+                    `;
+                }
+                
+                messagesList.appendChild(messageElement);
+            });
+            
+            messagesList.scrollTop = messagesList.scrollHeight;
+            document.getElementById('messages-modal').classList.remove('hidden');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (!text || !AppState.currentConversation) return;
+            
+            const newMessage = {
+                id: Date.now(),
+                senderId: AppState.currentUser.id,
+                text: text,
+                time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                read: true
+            };
+            
+            AppState.currentConversation.messages.push(newMessage);
+            AppState.currentConversation.lastMessage = text;
+            AppState.currentConversation.lastMessageTime = newMessage.time;
+            
+            input.value = '';
+            saveToLocalStorage();
+            
+            // Mettre à jour l'affichage
+            const messagesList = document.getElementById('messages-list');
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message sent';
+            messageElement.innerHTML = `
+                <div class="message-text">${text}</div>
+                <div class="message-time">${newMessage.time}</div>
+            `;
+            messagesList.appendChild(messageElement);
+            messagesList.scrollTop = messagesList.scrollHeight;
+            
+            // Mettre à jour la liste des conversations
+            renderConversations();
+            
+            // Simuler une réponse automatique après 1 seconde
+            setTimeout(() => {
+                const replyMessage = {
+                    id: Date.now() + 1,
+                    senderId: AppState.currentConversation.userId,
+                    text: "Message reçu. Je vous répondrai dès que possible !",
+                    time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                    read: false
+                };
+                
+                AppState.currentConversation.messages.push(replyMessage);
+                AppState.currentConversation.lastMessage = replyMessage.text;
+                AppState.currentConversation.lastMessageTime = replyMessage.time;
+                AppState.currentConversation.unread += 1;
+                
+                saveToLocalStorage();
+                updateMessagesBadge();
+                
+                if (document.getElementById('messages-modal').classList.contains('hidden')) {
+                    // Si la conversation n'est pas ouverte, juste mettre à jour le badge
+                    return;
+                }
+                
+                // Ajouter la réponse à l'affichage
+                const replyElement = document.createElement('div');
+                replyElement.className = 'message received';
+                
+                const user = AppState.users.find(u => u.id === AppState.currentConversation.userId);
+                replyElement.innerHTML = `
+                    <div class="message-sender">${user ? user.name : 'Utilisateur'}</div>
+                    <div class="message-text">${replyMessage.text}</div>
+                    <div class="message-time">${replyMessage.time}</div>
+                `;
+                
+                messagesList.appendChild(replyElement);
+                messagesList.scrollTop = messagesList.scrollHeight;
+                
+                // Mettre à jour la liste des conversations
+                renderConversations();
+                
+            }, 1000);
+        }
+
+        function closeMessagesModal() {
+            document.getElementById('messages-modal').classList.add('hidden');
+            AppState.currentConversation = null;
+        }
+
+        function startNewConversation() {
+            document.getElementById('new-conversation-modal').classList.remove('hidden');
+            document.getElementById('search-user-input').value = '';
+            document.getElementById('search-results').innerHTML = `
+                <div class="text-center text-muted p-4">
+                    <div>Recherchez un utilisateur pour démarrer une conversation</div>
+                </div>
+            `;
+        }
+
+        function closeNewConversationModal() {
+            document.getElementById('new-conversation-modal').classList.add('hidden');
+        }
+
+        function searchUsersForChat(query) {
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (!query.trim()) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center text-muted p-4">
+                        <div>Recherchez un utilisateur pour démarrer une conversation</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const filteredUsers = AppState.users.filter(user => 
+                user.id !== AppState.currentUser?.id && // Exclure l'utilisateur actuel
+                (user.name.toLowerCase().includes(query.toLowerCase()) ||
+                 user.email.toLowerCase().includes(query.toLowerCase()) ||
+                 user.phone.includes(query))
+            );
+            
+            if (filteredUsers.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center text-muted p-4">
+                        <div>Aucun utilisateur trouvé</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            resultsContainer.innerHTML = '';
+            filteredUsers.forEach(user => {
+                const userElement = document.createElement('div');
+                userElement.className = 'user-chat-card';
+                userElement.onclick = () => createNewConversation(user);
+                
+                userElement.innerHTML = `
+                    <div class="user-avatar" style="width: 50px; height: 50px; font-size: 20px;">
+                        ${user.avatar}
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 600; font-size: 14px;">${user.name}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
+                            ${user.isDriver ? '🚗 Chauffeur' : '👤 Passager'}
+                        </div>
+                    </div>
+                `;
+                resultsContainer.appendChild(userElement);
+            });
+        }
+
+        function createNewConversation(user) {
+            // Vérifier si une conversation existe déjà
+            const existingConversation = AppState.conversations.find(c => c.userId === user.id);
+            
+            if (existingConversation) {
+                closeNewConversationModal();
+                openConversation(existingConversation.id);
+                return;
+            }
+            
+            // Créer une nouvelle conversation
+            const newConversation = {
+                id: Date.now(),
+                userId: user.id,
+                userName: user.name,
+                userAvatar: user.avatar,
+                lastMessage: "Conversation démarrée",
+                lastMessageTime: "À l'instant",
+                unread: 0,
+                messages: [
+                    {
+                        id: 1,
+                        senderId: AppState.currentUser.id,
+                        text: "Bonjour !",
+                        time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                        read: true
+                    }
+                ]
+            };
+            
+            AppState.conversations.unshift(newConversation);
+            saveToLocalStorage();
+            
+            closeNewConversationModal();
+            renderConversations();
+            openConversation(newConversation.id);
+            
+            showNotification(`Conversation démarrée avec ${user.name}`, 'success');
+        }
+
+        function openChatWithDriver() {
+            if (!AppState.currentDriver) {
+                showNotification('Aucun chauffeur sélectionné', 'error');
+                return;
+            }
+            
+            // Trouver l'utilisateur correspondant au chauffeur
+            const driverUser = AppState.users.find(u => 
+                u.name === AppState.currentDriver.name || 
+                u.phone === AppState.currentDriver.phone
+            );
+            
+            if (!driverUser) {
+                showNotification('Impossible de contacter le chauffeur', 'error');
+                return;
+            }
+            
+            createNewConversation(driverUser);
+        }
+
+        function startChatWithUser() {
+            const modal = document.getElementById('user-profile-modal');
+            if (!modal.classList.contains('hidden')) {
+                const userId = parseInt(modal.dataset.userId);
+                const user = AppState.users.find(u => u.id === userId);
+                if (user) {
+                    closeUserProfileModal();
+                    createNewConversation(user);
+                }
+            }
+        }
+
+        function updateMessagesBadge() {
+            const totalUnread = AppState.conversations.reduce((sum, conv) => sum + conv.unread, 0);
+            const badge = document.getElementById('messages-badge');
+            
+            if (totalUnread > 0) {
+                badge.textContent = totalUnread;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+            
+            AppState.unreadMessages = totalUnread;
+        }
+
         // ===== MAP FUNCTIONS =====
         function initializeMap() {
             try {
@@ -5870,6 +6663,12 @@
             if (AppState.currentUser.isDriver) {
                 AppState.driverMode = true;
                 showNotification('Mode chauffeur activé', 'success');
+            }
+            
+            // Initialiser les conversations après connexion
+            if (AppState.conversations.length === 0) {
+                initializeConversations();
+                renderConversations();
             }
         }
 
@@ -6476,6 +7275,10 @@
                 updateRecentOrders();
             }
             
+            if (pageName === 'messages') {
+                renderConversations();
+            }
+            
             // Réinitialiser les vidéos après le changement de page
             setTimeout(initVideoPlayers, 300);
         }
@@ -6657,6 +7460,9 @@
                 case 'drivers':
                     loadAdminDrivers();
                     break;
+                case 'products':
+                    loadAdminProducts();
+                    break;
                 case 'orders':
                     loadAdminOrders();
                     break;
@@ -6677,6 +7483,7 @@
             AppState.adminData.stats = {
                 totalUsers: AppState.adminData.users.length,
                 totalDrivers: AppState.adminData.drivers.length,
+                totalProducts: AppState.adminData.products.length,
                 totalOrders: AppState.adminData.orders.length,
                 totalPosts: AppState.adminData.posts.length,
                 todayOrders: AppState.adminData.orders.filter(o => o.date === today).length,
@@ -6689,8 +7496,8 @@
             // Mettre à jour l'affichage
             document.getElementById('admin-total-users').textContent = AppState.adminData.stats.totalUsers;
             document.getElementById('admin-total-drivers').textContent = AppState.adminData.stats.totalDrivers;
+            document.getElementById('admin-total-products').textContent = AppState.adminData.stats.totalProducts;
             document.getElementById('admin-total-orders').textContent = AppState.adminData.stats.totalOrders;
-            document.getElementById('admin-total-posts').textContent = AppState.adminData.stats.totalPosts;
             document.getElementById('admin-today-orders').textContent = AppState.adminData.stats.todayOrders;
             document.getElementById('admin-today-revenue').textContent = formatPrice(AppState.adminData.stats.todayRevenue);
             document.getElementById('admin-active-users').textContent = AppState.adminData.stats.activeUsers;
@@ -6775,6 +7582,43 @@
             });
         }
 
+        function loadAdminProducts() {
+            const container = document.getElementById('admin-products-grid');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            AppState.adminData.products.forEach(product => {
+                const isPartner = product.category === 'partners';
+                const productElement = document.createElement('div');
+                productElement.className = 'admin-product-card';
+                
+                productElement.innerHTML = `
+                    <div class="admin-product-image">
+                        ${product.image}
+                    </div>
+                    <div style="font-weight: 600; font-size: 12px; margin-bottom: 4px;">${product.name}</div>
+                    <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 4px;">
+                        ${product.category === 'food' ? '🍔 Nourriture' : 
+                         product.category === 'accessories' ? '🔧 Accessoires' : 
+                         '🤝 Partenaires'}
+                    </div>
+                    <div style="font-weight: 700; color: ${isPartner ? 'var(--partner-color)' : 'var(--shop-primary)'}; font-size: 14px;">
+                        ${formatPrice(product.price)}
+                    </div>
+                    <div class="admin-product-actions">
+                        <button class="admin-action-btn edit" onclick="editProduct(${product.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="admin-action-btn delete" onclick="deleteProduct(${product.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(productElement);
+            });
+        }
+
         function loadAdminOrders() {
             const table = document.getElementById('admin-orders-table');
             table.innerHTML = '';
@@ -6842,6 +7686,264 @@
                 `;
                 table.appendChild(row);
             });
+        }
+
+        function showAddProductModal() {
+            document.getElementById('edit-product-title').textContent = 'Ajouter un produit';
+            document.getElementById('edit-product-form').innerHTML = createProductForm();
+            document.getElementById('edit-product-modal').classList.remove('hidden');
+        }
+
+        function editProduct(productId) {
+            const product = AppState.products.find(p => p.id === productId);
+            if (!product) return;
+            
+            document.getElementById('edit-product-title').textContent = 'Modifier le produit';
+            document.getElementById('edit-product-form').innerHTML = createProductForm(product);
+            document.getElementById('edit-product-modal').classList.remove('hidden');
+        }
+
+        function createProductForm(product = null) {
+            const isEdit = product !== null;
+            
+            return `
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-box"></i>
+                        Nom du produit
+                    </label>
+                    <input type="text" 
+                           id="product-name" 
+                           class="input-field"
+                           value="${product ? product.name : ''}"
+                           placeholder="Nom du produit">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-align-left"></i>
+                        Description
+                    </label>
+                    <textarea id="product-description" 
+                              class="input-field"
+                              rows="3"
+                              placeholder="Description détaillée du produit">${product ? product.description : ''}</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-coins"></i>
+                        Prix (Ar)
+                    </label>
+                    <input type="number" 
+                           id="product-price" 
+                           class="input-field"
+                           value="${product ? product.price : ''}"
+                           min="0"
+                           step="100"
+                           placeholder="Prix en Ariary">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-list"></i>
+                        Catégorie
+                    </label>
+                    <select id="product-category" class="input-field">
+                        <option value="food" ${product && product.category === 'food' ? 'selected' : ''}>🍔 Nourriture</option>
+                        <option value="accessories" ${product && product.category === 'accessories' ? 'selected' : ''}>🔧 Accessoires</option>
+                        <option value="partners" ${product && product.category === 'partners' ? 'selected' : ''}>🤝 Partenaires</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-cube"></i>
+                        Stock
+                    </label>
+                    <input type="number" 
+                           id="product-stock" 
+                           class="input-field"
+                           value="${product ? product.stock : '0'}"
+                           min="0"
+                           placeholder="Quantité en stock">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-clock"></i>
+                        Temps de préparation (min)
+                    </label>
+                    <input type="number" 
+                           id="product-preparation-time" 
+                           class="input-field"
+                           value="${product ? product.preparationTime : '0'}"
+                           min="0"
+                           placeholder="0 pour les produits immédiats">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-star"></i>
+                        Note (1-5)
+                    </label>
+                    <input type="number" 
+                           id="product-rating" 
+                           class="input-field"
+                           value="${product ? product.rating : '4.0'}"
+                           min="1"
+                           max="5"
+                           step="0.1"
+                           placeholder="Note du produit">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-image"></i>
+                        Icône/Image
+                    </label>
+                    <input type="text" 
+                           id="product-image" 
+                           class="input-field"
+                           value="${product ? product.image : '📦'}"
+                           placeholder="Emoji ou URL d'image">
+                </div>
+
+                <div id="partner-fields" style="${product && product.category === 'partners' ? '' : 'display: none;'}">
+                    <div class="input-group">
+                        <label class="input-label">
+                            <i class="fas fa-handshake"></i>
+                            Partenaire
+                        </label>
+                        <input type="text" 
+                               id="product-partner" 
+                               class="input-field"
+                               value="${product && product.partner ? product.partner : ''}"
+                               placeholder="Nom du partenaire">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">
+                            <i class="fas fa-gift"></i>
+                            Avantages (un par ligne)
+                        </label>
+                        <textarea id="product-benefits" 
+                                  class="input-field"
+                                  rows="3"
+                                  placeholder="Avantage 1&#10;Avantage 2&#10;Avantage 3">${product && product.benefits ? product.benefits.join('&#10;') : ''}</textarea>
+                    </div>
+                </div>
+
+                <button class="btn ${isEdit ? 'btn-warning' : 'btn-success'} btn-block mt-3" onclick="${isEdit ? `updateProduct(${product.id})` : 'saveNewProduct()'}">
+                    <i class="fas fa-save"></i>
+                    ${isEdit ? 'Mettre à jour' : 'Ajouter le produit'}
+                </button>
+            `;
+        }
+
+        function saveNewProduct() {
+            const product = getProductFormData();
+            if (!product) return;
+            
+            product.id = Date.now();
+            product.featured = false;
+            
+            AppState.products.push(product);
+            AppState.adminData.products.push(product);
+            
+            saveToLocalStorage();
+            renderProducts();
+            loadAdminProducts();
+            closeEditProductModal();
+            
+            showNotification('Produit ajouté avec succès', 'success');
+            updateAdminStats();
+        }
+
+        function updateProduct(productId) {
+            const productIndex = AppState.products.findIndex(p => p.id === productId);
+            if (productIndex === -1) return;
+            
+            const updatedProduct = getProductFormData();
+            if (!updatedProduct) return;
+            
+            updatedProduct.id = productId;
+            updatedProduct.featured = AppState.products[productIndex].featured;
+            
+            AppState.products[productIndex] = updatedProduct;
+            
+            // Mettre à jour dans adminData aussi
+            const adminProductIndex = AppState.adminData.products.findIndex(p => p.id === productId);
+            if (adminProductIndex !== -1) {
+                AppState.adminData.products[adminProductIndex] = updatedProduct;
+            }
+            
+            saveToLocalStorage();
+            renderProducts();
+            loadAdminProducts();
+            closeEditProductModal();
+            
+            showNotification('Produit mis à jour avec succès', 'success');
+        }
+
+        function getProductFormData() {
+            const name = document.getElementById('product-name').value.trim();
+            const description = document.getElementById('product-description').value.trim();
+            const price = parseInt(document.getElementById('product-price').value);
+            const category = document.getElementById('product-category').value;
+            const stock = parseInt(document.getElementById('product-stock').value);
+            const preparationTime = parseInt(document.getElementById('product-preparation-time').value);
+            const rating = parseFloat(document.getElementById('product-rating').value);
+            const image = document.getElementById('product-image').value.trim();
+            
+            if (!name || !description || !price || !category || stock < 0) {
+                showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+                return null;
+            }
+            
+            const product = {
+                name,
+                description,
+                price,
+                category,
+                stock,
+                preparationTime,
+                rating,
+                image
+            };
+            
+            if (category === 'partners') {
+                const partner = document.getElementById('product-partner').value.trim();
+                const benefitsText = document.getElementById('product-benefits').value.trim();
+                
+                if (partner) {
+                    product.partner = partner;
+                }
+                
+                if (benefitsText) {
+                    product.benefits = benefitsText.split('\n').filter(b => b.trim() !== '');
+                }
+            }
+            
+            return product;
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
+                AppState.products = AppState.products.filter(p => p.id !== productId);
+                AppState.adminData.products = AppState.adminData.products.filter(p => p.id !== productId);
+                
+                saveToLocalStorage();
+                renderProducts();
+                loadAdminProducts();
+                
+                showNotification('Produit supprimé', 'success');
+                updateAdminStats();
+            }
+        }
+
+        function closeEditProductModal() {
+            document.getElementById('edit-product-modal').classList.add('hidden');
         }
 
         function searchUsers(query) {
@@ -7046,27 +8148,33 @@
                 followBtn.classList.remove('btn-primary');
                 followBtn.classList.add('btn-success');
             } else {
-                followBtn.innerHTML = '<i class="fas fa-user-plus"></i> S\'abonner';
+                followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Suivre';
                 followBtn.classList.remove('btn-success');
                 followBtn.classList.add('btn-primary');
             }
             
+            // Stocker l'ID de l'utilisateur dans le modal
+            document.getElementById('user-profile-modal').dataset.userId = userId;
             document.getElementById('user-profile-modal').classList.remove('hidden');
         }
 
         function toggleFollow() {
-            const user = AppState.users.find(u => u.id === AppState.users[0].id);
-            if (!user) return;
-            
-            user.isFollowing = !user.isFollowing;
-            user.followers += user.isFollowing ? 1 : -1;
-            
-            if (AppState.currentUser) {
-                AppState.currentUser.following += user.isFollowing ? 1 : -1;
+            const modal = document.getElementById('user-profile-modal');
+            if (!modal.classList.contains('hidden')) {
+                const userId = parseInt(modal.dataset.userId);
+                const user = AppState.users.find(u => u.id === userId);
+                if (!user) return;
+                
+                user.isFollowing = !user.isFollowing;
+                user.followers += user.isFollowing ? 1 : -1;
+                
+                if (AppState.currentUser) {
+                    AppState.currentUser.following += user.isFollowing ? 1 : -1;
+                }
+                
+                showUserProfile(user.id);
+                showNotification(user.isFollowing ? 'Abonnement réussi!' : 'Désabonnement réussi!', 'success');
             }
-            
-            showUserProfile(user.id);
-            showNotification(user.isFollowing ? 'Abonnement réussi!' : 'Désabonnement réussi!', 'success');
         }
 
         function reportPost(postId) {
@@ -7105,107 +8213,16 @@
         // ===== INITIAL SHOP SETUP =====
         function initializeShop() {
             calculateDeliveryPrice();
-        }
-
-        // ===== MESSAGES FUNCTIONS =====
-        function simulateMessages() {
-            AppState.messages = [
-                {
-                    id: 1,
-                    sender: 'driver',
-                    name: 'Jean Rakoto',
-                    text: 'Bonjour ! Je suis en route. Je serai là dans 5 minutes.',
-                    time: '10:25',
-                    avatar: '👨'
-                },
-                {
-                    id: 2,
-                    sender: 'user',
-                    name: 'Vous',
-                    text: 'Parfait, je vous attends devant l\'entrée principale.',
-                    time: '10:26',
-                    avatar: '👤'
-                },
-                {
-                    id: 3,
-                    sender: 'driver',
-                    name: 'Jean Rakoto',
-                    text: 'Je viens d\'arriver. Je suis dans une Toyota blanche.',
-                    time: '10:30',
-                    avatar: '👨'
+            
+            // Ajouter un écouteur pour afficher les champs partenaires
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.id === 'product-category') {
+                    const partnerFields = document.getElementById('partner-fields');
+                    if (partnerFields) {
+                        partnerFields.style.display = e.target.value === 'partners' ? 'block' : 'none';
+                    }
                 }
-            ];
-        }
-
-        function openMessages() {
-            if (!AppState.currentDriver) {
-                showNotification('Aucun chauffeur sélectionné', 'error');
-                return;
-            }
-            
-            document.getElementById('messages-modal').classList.remove('hidden');
-            renderMessages();
-        }
-
-        function closeMessagesModal() {
-            document.getElementById('messages-modal').classList.add('hidden');
-        }
-
-        function renderMessages() {
-            const container = document.getElementById('messages-list');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            AppState.messages.forEach(message => {
-                const messageElement = document.createElement('div');
-                messageElement.className = `message ${message.sender === 'user' ? 'sent' : 'received'}`;
-                messageElement.innerHTML = `
-                    ${message.sender !== 'user' ? `
-                        <div class="message-sender">${message.name}</div>
-                    ` : ''}
-                    <div class="message-text">${message.text}</div>
-                    <div class="message-time">${message.time}</div>
-                `;
-                container.appendChild(messageElement);
             });
-            
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const text = input.value.trim();
-            
-            if (!text) return;
-            
-            const newMessage = {
-                id: Date.now(),
-                sender: 'user',
-                name: 'Vous',
-                text: text,
-                time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-                avatar: '👤'
-            };
-            
-            AppState.messages.push(newMessage);
-            input.value = '';
-            
-            renderMessages();
-            
-            setTimeout(() => {
-                const reply = {
-                    id: Date.now() + 1,
-                    sender: 'driver',
-                    name: AppState.currentDriver ? AppState.currentDriver.name : 'Chauffeur',
-                    text: 'Message reçu. Merci !',
-                    time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-                    avatar: AppState.currentDriver ? (AppState.currentDriver.type === 'tuktuk' ? '🛺' : '🚗') : '👨'
-                };
-                
-                AppState.messages.push(reply);
-                renderMessages();
-            }, 1000);
         }
 
         function callDriver() {
@@ -7250,4 +8267,4 @@
         initializeApp();
     </script>
 </body>
-                    </html>
+    </html>
