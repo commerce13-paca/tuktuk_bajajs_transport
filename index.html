@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>VTC Mahajanga 401 - Transport & Boutique</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase SDK -->
@@ -380,6 +381,26 @@
             top: 8px;
             right: 8px;
             background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ===== MESSAGES NAV BADGE ===== */
+        .nav-tab.messages-tab {
+            position: relative;
+        }
+
+        .messages-nav-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary);
             color: white;
             font-size: 9px;
             font-weight: 700;
@@ -1148,6 +1169,85 @@
             cursor: pointer;
         }
 
+        /* ===== MESSAGES PAGE STYLES ===== */
+        .conversations-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .conversation-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .conversation-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: var(--space-sm);
+            overflow: hidden;
+        }
+
+        .conversation-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-user {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .conversation-preview {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .conversation-time {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .conversation-unread {
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
         /* ===== SOCIAL MEDIA STYLES MOBILE ===== */
         .post-card {
             background: var(--card-bg);
@@ -1354,6 +1454,14 @@
 
         .post-action.liked {
             color: var(--danger);
+        }
+
+        .post-action.message {
+            color: var(--primary);
+        }
+
+        .post-action.message:hover {
+            background: rgba(0, 122, 255, 0.1);
         }
 
         .post-comments {
@@ -2268,144 +2376,174 @@
                 font-size: 20px;
             }
         }
-        
-        /* ===== NOUVELLES CLASSES POUR MESSAGERIE ET PRODUITS ===== */
-        .user-chat-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: var(--radius-md);
-            padding: var(--space-sm);
-            margin-bottom: var(--space-sm);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid transparent;
-        }
-        
-        .user-chat-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-        }
-        
-        .user-chat-card.unread {
-            background: rgba(0, 122, 255, 0.1);
-            border-color: var(--primary);
-        }
-        
-        .chat-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: var(--danger);
-            color: white;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 5px;
-            border-radius: 10px;
-            min-width: 16px;
-            text-align: center;
-            animation: pulse 1.5s infinite;
-        }
-        
-        .product-detail-image {
-            width: 100%;
-            height: 200px;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            background: #000;
-            margin-bottom: var(--space-md);
-        }
-        
-        .product-detail-image img {
+
+        /* ===== FULLSCREEN VIDEO STYLES ===== */
+        .fullscreen-video {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-        }
-        
-        .product-detail-description {
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--text);
-            margin-bottom: var(--space-md);
-        }
-        
-        .product-detail-meta {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-sm);
-            margin-bottom: var(--space-md);
-        }
-        
-        .product-meta-item {
-            background: rgba(255, 255, 255, 0.03);
-            padding: var(--space-sm);
-            border-radius: var(--radius-sm);
-            text-align: center;
-        }
-        
-        .product-meta-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        
-        .product-meta-value {
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .edit-product-btn {
-            background: var(--warning);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
+            background: #000;
+            z-index: 9999;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            margin-left: auto;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
         }
-        
-        .admin-products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: var(--space-sm);
-            margin-top: var(--space-md);
+
+        .fullscreen-video.active {
+            opacity: 1;
+            pointer-events: all;
         }
-        
-        .admin-product-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius-md);
-            padding: var(--space-sm);
-            border: 1px solid var(--border);
-        }
-        
-        .admin-product-image {
+
+        .fullscreen-video video {
             width: 100%;
-            height: 80px;
-            background: linear-gradient(135deg, var(--shop-primary), var(--shop-secondary));
-            border-radius: var(--radius-sm);
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .fullscreen-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            z-index: 10000;
+        }
+
+        .fullscreen-control-btn {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            margin-bottom: var(--space-sm);
-            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
         }
-        
-        .admin-product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        .fullscreen-control-btn:active {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: var(--primary);
+            transform: scale(0.95);
         }
-        
-        .admin-product-actions {
+
+        .close-fullscreen-btn {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10001;
+            backdrop-filter: blur(10px);
+        }
+
+        .close-fullscreen-btn:active {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: var(--danger);
+            transform: scale(0.95);
+        }
+
+        /* ===== VIDEO NAVIGATION ===== */
+        .video-nav-container {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        .video-nav-btn {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            pointer-events: all;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-nav-btn:active {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: var(--primary);
+            transform: scale(0.95);
+        }
+
+        .video-nav-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* ===== REAL USER INDICATOR ===== */
+        .real-user-badge {
+            display: inline-flex;
+            align-items: center;
             gap: 4px;
-            margin-top: var(--space-sm);
+            background: linear-gradient(135deg, var(--success), #2ecc71);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, var(--admin-color), #f39c12);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .driver-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
         }
     </style>
 </head>
@@ -2450,15 +2588,19 @@
                 <span>Boutique</span>
                 <span class="nav-badge hidden" id="shop-badge">0</span>
             </button>
-            <button class="nav-tab" data-page="messages">
-                <i class="fas fa-comments"></i>
-                <span>Messages</span>
-                <span class="nav-badge hidden" id="messages-badge">0</span>
+            <button class="nav-tab" data-page="map">
+                <i class="fas fa-map"></i>
+                <span>Carte</span>
             </button>
             <button class="nav-tab" data-page="social">
                 <i class="fas fa-users"></i>
                 <span>Social</span>
                 <span class="nav-badge hidden" id="social-badge">3</span>
+            </button>
+            <button class="nav-tab messages-tab" data-page="messages" onclick="showPage('messages')">
+                <i class="fas fa-comments"></i>
+                <span>Messages</span>
+                <span class="messages-nav-badge hidden" id="messages-nav-badge">0</span>
             </button>
         </nav>
 
@@ -2517,12 +2659,12 @@
                                 <div class="ride-type-name">Boutique</div>
                                 <div class="ride-type-price">Livraison rapide</div>
                             </div>
-                            <div class="ride-type" onclick="showPage('messages')">
+                            <div class="ride-type" onclick="showPage('map')">
                                 <div class="ride-type-icon">
-                                    <i class="fas fa-comments"></i>
+                                    <i class="fas fa-map-marker-alt"></i>
                                 </div>
-                                <div class="ride-type-name">Messages</div>
-                                <div class="ride-type-price">Chat en direct</div>
+                                <div class="ride-type-name">Carte Live</div>
+                                <div class="ride-type-price">Suivi en temps réel</div>
                             </div>
                         </div>
                     </div>
@@ -2567,52 +2709,12 @@
                                 <i class="fas fa-newspaper"></i>
                                 <span>Publications récentes</span>
                             </div>
+                            <button class="btn btn-sm btn-primary" onclick="showPage('social')">
+                                Voir tout
+                            </button>
                         </div>
-                        <div class="post-card">
-                            <div class="post-header">
-                                <div class="post-user-avatar">
-                                    <i class="fas fa-taxi"></i>
-                                </div>
-                                <div class="post-user-info">
-                                    <div class="post-user-name">VTC Mahajanga</div>
-                                    <div class="post-time">Aujourd'hui • 10:30</div>
-                                </div>
-                            </div>
-                            <div class="post-content">
-                                <div class="post-text">
-                                    🎉 Nouvelle fonctionnalité ! Commandez de la nourriture et des accessoires directement depuis l'app. Livraison rapide dans toute la ville !
-                                </div>
-                                <div class="post-media">
-                                    <video controls playsinline>
-                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-city-with-many-high-rise-buildings-3973-large.mp4" type="video/mp4">
-                                        Votre navigateur ne supporte pas la vidéo.
-                                    </video>
-                                </div>
-                                <div class="post-tags">
-                                    <span class="post-tag">#Nouveauté</span>
-                                    <span class="post-tag">#Boutique</span>
-                                    <span class="post-tag">#Livraison</span>
-                                </div>
-                            </div>
-                            <div class="post-stats">
-                                <div>45 mentions J'aime</div>
-                                <div>8 commentaires</div>
-                                <div>3 partages</div>
-                            </div>
-                            <div class="post-actions">
-                                <div class="post-action">
-                                    <i class="fas fa-thumbs-up"></i>
-                                    <span>J'aime</span>
-                                </div>
-                                <div class="post-action">
-                                    <i class="fas fa-comment"></i>
-                                    <span>Commenter</span>
-                                </div>
-                                <div class="post-action">
-                                    <i class="fas fa-share"></i>
-                                    <span>Partager</span>
-                                </div>
-                            </div>
+                        <div id="recent-posts-container">
+                            <!-- Les publications récentes seront chargées ici -->
                         </div>
                     </div>
                 </div>
@@ -2787,35 +2889,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- PAGE MESSAGES -->
-            <div id="messages-page" class="page">
-                <div class="page-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-comments"></i>
-                                <span>Messages</span>
-                            </div>
-                            <button class="btn btn-sm btn-primary" onclick="startNewConversation()">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        
-                        <div id="conversations-list">
-                            <!-- Conversations -->
-                            <div class="text-center text-muted p-4">
-                                <i class="fas fa-comments" style="font-size: 36px; margin-bottom: var(--space-sm);"></i>
-                                <div>Aucune conversation</div>
-                                <button class="btn btn-primary mt-3" onclick="startNewConversation()">
-                                    <i class="fas fa-plus"></i>
-                                    Nouvelle conversation
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- PAGE CARTE -->
             <div id="map-page" class="page">
@@ -2840,13 +2913,16 @@
                                 <button class="map-control-btn" id="center-mj-btn" title="Centrer Mahajanga">
                                     <i class="fas fa-map-marker-alt"></i>
                                 </button>
+                                <button class="map-control-btn" id="toggle-radius-btn" title="Afficher/Masquer le cercle">
+                                    <i class="fas fa-circle"></i>
+                                </button>
                             </div>
                         </div>
                         
                         <div class="text-center mt-3">
                             <div class="text-muted d-flex align-items-center justify-content-center gap-2">
                                 <i class="fas fa-info-circle"></i>
-                                <span style="font-size: 12px;">Chauffeurs verts = En ligne • Cercle bleu = Votre position</span>
+                                <span style="font-size: 12px;">Cercle bleu = Zone de 3km autour de vous</span>
                             </div>
                         </div>
                     </div>
@@ -2855,8 +2931,8 @@
                         <div class="card-header">
                             <div class="card-title">
                                 <i class="fas fa-users"></i>
-                                <span>Chauffeurs à proximité</span>
-                                <span id="drivers-count" class="text-muted">4 en ligne</span>
+                                <span>Chauffeurs à proximité (3km)</span>
+                                <span id="drivers-count" class="text-muted">0 en ligne</span>
                             </div>
                         </div>
                         <div id="drivers-list">
@@ -2905,7 +2981,7 @@
                                multiple 
                                onchange="handleMediaUpload(event)">
                         
-                        <button class="btn btn-primary btn-block mt-3" onclick="createPost()">
+                        <button class="btn btn-primary btn-block mt-3" id="publish-post-btn" onclick="createPost()">
                             <i class="fas fa-paper-plane"></i>
                             Publier
                         </button>
@@ -2914,6 +2990,45 @@
                     <!-- Publications -->
                     <div id="posts-container">
                         <!-- Posts -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE MESSAGES -->
+            <div id="messages-page" class="page">
+                <div class="page-content">
+                    <!-- En-tête Messages -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-comments"></i>
+                                <span>Messages</span>
+                            </div>
+                            <button class="btn btn-sm btn-primary" onclick="startNewConversation()">
+                                <i class="fas fa-plus"></i>
+                                Nouveau
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Liste des conversations -->
+                    <div class="card">
+                        <div class="conversations-list" id="conversations-list">
+                            <!-- Conversations -->
+                        </div>
+                    </div>
+
+                    <!-- Suggestions d'amis pour discuter -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-user-friends"></i>
+                                <span>Suggestions</span>
+                            </div>
+                        </div>
+                        <div id="suggested-users">
+                            <!-- Suggestions -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3021,6 +3136,10 @@
                                     <div class="stat-number" id="orders-count">0</div>
                                     <div class="stat-label">Commandes</div>
                                 </div>
+                                <div class="stat-item" onclick="showPage('messages')">
+                                    <div class="stat-number" id="messages-count">0</div>
+                                    <div class="stat-label">Messages</div>
+                                </div>
                             </div>
                             
                             <button class="btn btn-primary mt-3" onclick="editProfile()">
@@ -3085,10 +3204,6 @@
                                     <i class="fas fa-car"></i>
                                     Chauffeurs
                                 </div>
-                                <div class="admin-tab" onclick="showAdminTab('products')">
-                                    <i class="fas fa-box"></i>
-                                    Produits
-                                </div>
                                 <div class="admin-tab" onclick="showAdminTab('orders')">
                                     <i class="fas fa-shopping-cart"></i>
                                     Commandes
@@ -3096,6 +3211,10 @@
                                 <div class="admin-tab" onclick="showAdminTab('posts')">
                                     <i class="fas fa-newspaper"></i>
                                     Publications
+                                </div>
+                                <div class="admin-tab" onclick="showAdminTab('messages')">
+                                    <i class="fas fa-comments"></i>
+                                    Messages
                                 </div>
                             </div>
 
@@ -3111,12 +3230,16 @@
                                         <div class="stat-label">Chauffeurs</div>
                                     </div>
                                     <div class="stat-card">
-                                        <div class="stat-number" id="admin-total-products">0</div>
-                                        <div class="stat-label">Produits</div>
-                                    </div>
-                                    <div class="stat-card">
                                         <div class="stat-number" id="admin-total-orders">0</div>
                                         <div class="stat-label">Commandes</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="admin-total-posts">0</div>
+                                        <div class="stat-label">Publications</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="admin-total-messages">0</div>
+                                        <div class="stat-label">Messages</div>
                                     </div>
                                 </div>
 
@@ -3178,17 +3301,6 @@
                                 </div>
                             </div>
 
-                            <!-- Gestion Produits -->
-                            <div class="admin-section" id="admin-products">
-                                <button class="btn btn-admin btn-block mb-3" onclick="showAddProductModal()">
-                                    <i class="fas fa-plus"></i>
-                                    Ajouter un produit
-                                </button>
-                                <div class="admin-products-grid" id="admin-products-grid">
-                                    <!-- Produits -->
-                                </div>
-                            </div>
-
                             <!-- Gestion Commandes -->
                             <div class="admin-section" id="admin-orders">
                                 <div style="max-height: 300px; overflow-y: auto;">
@@ -3227,6 +3339,26 @@
                                     </table>
                                 </div>
                             </div>
+
+                            <!-- Gestion Messages -->
+                            <div class="admin-section" id="admin-messages">
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    <table class="admin-table">
+                                        <thead>
+                                            <tr>
+                                                <th>De</th>
+                                                <th>À</th>
+                                                <th>Message</th>
+                                                <th>Heure</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-messages-table">
+                                            <!-- Messages -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3258,7 +3390,7 @@
                 <i class="fas fa-phone"></i>
                 Appeler
             </button>
-            <button class="ride-action-btn message" onclick="openChatWithDriver()">
+            <button class="ride-action-btn message" onclick="openMessages()">
                 <i class="fas fa-comment"></i>
                 Message
             </button>
@@ -3275,7 +3407,7 @@
             <div class="modal-header">
                 <div class="card-title">
                     <i class="fas fa-comments"></i>
-                    <span id="chat-title">Messages</span>
+                    <span id="messages-modal-title">Messages</span>
                 </div>
                 <button class="modal-close" onclick="closeMessagesModal()">
                     <i class="fas fa-times"></i>
@@ -3296,7 +3428,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- MODAL NOUVELLE CONVERSATION -->
     <div id="new-conversation-modal" class="modal-overlay hidden">
         <div class="modal-content">
@@ -3310,7 +3442,7 @@
                 </button>
             </div>
             
-            <div class="input-group mb-3">
+            <div class="input-group">
                 <label class="input-label">
                     <i class="fas fa-search"></i>
                     Rechercher un utilisateur
@@ -3318,11 +3450,11 @@
                 <input type="text" 
                        class="input-field" 
                        id="search-user-input"
-                       placeholder="Nom, email ou téléphone..."
-                       oninput="searchUsersForChat(this.value)">
+                       placeholder="Nom, email ou @username"
+                       oninput="searchUsersForMessage(this.value)">
             </div>
-            
-            <div id="search-results" style="max-height: 300px; overflow-y: auto;">
+
+            <div class="conversations-list" id="search-users-results" style="max-height: 300px; overflow-y: auto; margin-top: var(--space-md);">
                 <!-- Résultats de recherche -->
             </div>
         </div>
@@ -3521,13 +3653,13 @@
                 </div>
                 
                 <div class="d-flex gap-2 mt-3">
-                    <button class="btn btn-primary flex-1" onclick="startChatWithUser()">
+                    <button class="btn btn-primary flex-1" id="follow-btn" onclick="toggleFollow()">
+                        <i class="fas fa-user-plus"></i>
+                        S'abonner
+                    </button>
+                    <button class="btn btn-success flex-1" onclick="sendMessageToUser()">
                         <i class="fas fa-comment"></i>
                         Message
-                    </button>
-                    <button class="btn flex-1" id="follow-btn" onclick="toggleFollow()">
-                        <i class="fas fa-user-plus"></i>
-                        Suivre
                     </button>
                 </div>
             </div>
@@ -3780,40 +3912,40 @@
         </div>
     </div>
 
-    <!-- MODAL DÉTAILS PRODUIT -->
-    <div id="product-detail-modal" class="modal-overlay hidden">
+    <!-- MODAL DÉTAILS PRODUIT PARTENAIRE -->
+    <div id="partner-product-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="card-title">
-                    <i class="fas fa-info-circle"></i>
-                    <span id="product-detail-title">Détails du produit</span>
+                    <i class="fas fa-handshake"></i>
+                    <span id="partner-product-title">Produit Partenaire</span>
                 </div>
-                <button class="modal-close" onclick="closeProductDetailModal()">
+                <button class="modal-close" onclick="closePartnerProductModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div id="product-detail-content">
-                <!-- Détails du produit -->
+            <div id="partner-product-content">
+                <!-- Détails du produit partenaire -->
             </div>
         </div>
     </div>
 
-    <!-- MODAL AJOUTER/MODIFIER PRODUIT -->
-    <div id="edit-product-modal" class="modal-overlay hidden">
+    <!-- MODAL ADMIN -->
+    <div id="admin-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="card-title">
-                    <i class="fas fa-box"></i>
-                    <span id="edit-product-title">Ajouter un produit</span>
+                    <i class="fas fa-crown"></i>
+                    <span id="admin-modal-title">Administration</span>
                 </div>
-                <button class="modal-close" onclick="closeEditProductModal()">
+                <button class="modal-close" onclick="closeAdminModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div id="edit-product-form">
-                <!-- Formulaire produit -->
+            <div id="admin-modal-content">
+                <!-- Contenu admin -->
             </div>
         </div>
     </div>
@@ -3840,9 +3972,36 @@
         </div>
     </div>
 
+    <!-- FULLSCREEN VIDEO PLAYER -->
+    <div id="fullscreen-video" class="fullscreen-video">
+        <video id="fullscreen-video-player" controls playsinline>
+            Votre navigateur ne supporte pas la vidéo.
+        </video>
+        <div class="video-nav-container">
+            <button class="video-nav-btn" id="prev-video-btn" onclick="showPreviousVideo()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="video-nav-btn" id="next-video-btn" onclick="showNextVideo()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        <div class="fullscreen-controls">
+            <button class="fullscreen-control-btn" onclick="toggleFullscreenVideoPlay()">
+                <i class="fas fa-play" id="fullscreen-play-icon"></i>
+            </button>
+            <button class="fullscreen-control-btn" onclick="toggleFullscreenVideoMute()">
+                <i class="fas fa-volume-up" id="fullscreen-volume-icon"></i>
+            </button>
+        </div>
+        <button class="close-fullscreen-btn" onclick="closeFullscreenVideo()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
     <!-- SCRIPTS -->
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
     <script>
         // ===== CONFIGURATION =====
         const CONFIG = {
@@ -3868,7 +4027,9 @@
             ADMIN_CREDENTIALS: {
                 email: "admin@vtc401.com",
                 password: "Admin401!"
-            }
+            },
+            USER_RADIUS_KM: 3,
+            MAX_POSTS_HOME: 5
         };
 
         // ===== ÉTAT GLOBAL =====
@@ -3906,33 +4067,41 @@
             adminData: {
                 users: [],
                 drivers: [],
-                products: [],
                 orders: [],
                 posts: [],
+                messages: [],
                 stats: {
                     totalUsers: 0,
                     totalDrivers: 0,
-                    totalProducts: 0,
                     totalOrders: 0,
                     totalPosts: 0,
+                    totalMessages: 0,
                     todayOrders: 0,
                     todayRevenue: 0,
                     activeUsers: 0
                 }
             },
-            // Nouveaux états pour la messagerie
             conversations: [],
             currentConversation: null,
-            unreadMessages: 0
+            unreadMessages: 0,
+            userRadiusCircle: null,
+            radiusVisible: true,
+            isPosting: false,
+            lastPostTime: 0,
+            POST_COOLDOWN: 3000,
+            // Variables pour les vidéos en plein écran
+            fullscreenVideoIndex: -1,
+            currentVideoPostId: null,
+            fullscreenVideoIsPlaying: false,
+            fullscreenVideoIsMuted: false
         };
 
         // ===== DONNÉES SIMULÉES =====
         const SAMPLE_PRODUCTS = [
-            // Nourriture
             {
                 id: 1,
                 name: "Pizza VTC",
-                description: "Pizza grande avec tous les ingrédients. Préparée avec des produits frais locaux. Livraison rapide garantie.",
+                description: "Pizza grande avec tous les ingrédients",
                 price: 15000,
                 category: 'food',
                 image: '🍕',
@@ -3940,19 +4109,12 @@
                 featured: true,
                 preparationTime: 20,
                 stock: 50,
-                partner: null,
-                details: {
-                    ingredients: ["Pâte à pizza", "Sauce tomate", "Fromage", "Champignons", "Jambon", "Olives"],
-                    calories: "850 kcal",
-                    weight: "400g",
-                    allergens: ["Gluten", "Lactose"]
-                },
-                images: ['🍕', 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=400&h=300&fit=crop']
+                partner: null
             },
             {
                 id: 2,
                 name: "Burger Mahajanga",
-                description: "Burger avec viande locale et frites croustillantes. Servi avec sauce spéciale maison.",
+                description: "Burger avec viande locale et frites",
                 price: 12000,
                 category: 'food',
                 image: '🍔',
@@ -3960,19 +4122,12 @@
                 featured: false,
                 preparationTime: 15,
                 stock: 30,
-                partner: null,
-                details: {
-                    ingredients: ["Pain burger", "Steak de bœuf", "Fromage", "Salade", "Tomate", "Sauce maison"],
-                    calories: "720 kcal",
-                    weight: "350g",
-                    allergens: ["Gluten", "Lactose"]
-                },
-                images: ['🍔', 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop']
+                partner: null
             },
             {
                 id: 3,
                 name: "Salade Fraîche",
-                description: "Salade composée avec légumes frais du marché. Vinaigrette légère au citron.",
+                description: "Salade composée avec légumes frais",
                 price: 8000,
                 category: 'food',
                 image: '🥗',
@@ -3980,19 +4135,12 @@
                 featured: false,
                 preparationTime: 10,
                 stock: 25,
-                partner: null,
-                details: {
-                    ingredients: ["Laitue", "Tomates cerises", "Concombre", "Carottes", "Avocat", "Vinaigrette citron"],
-                    calories: "320 kcal",
-                    weight: "300g",
-                    allergens: ["Aucun"]
-                },
-                images: ['🥗', 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop']
+                partner: null
             },
             {
                 id: 4,
                 name: "Café Premium",
-                description: "Café arabica de qualité supérieure. Torréfaction locale. Servi chaud ou glacé.",
+                description: "Café arabica de qualité supérieure",
                 price: 3000,
                 category: 'food',
                 image: '☕',
@@ -4000,20 +4148,12 @@
                 featured: true,
                 preparationTime: 5,
                 stock: 100,
-                partner: null,
-                details: {
-                    ingredients: ["Café arabica", "Eau", "Sucre (optionnel)", "Lait (optionnel)"],
-                    calories: "5 kcal",
-                    volume: "250ml",
-                    allergens: ["Aucun"]
-                },
-                images: ['☕', 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop']
+                partner: null
             },
-            // Accessoires
             {
                 id: 5,
                 name: "Chargeur USB Voiture",
-                description: "Chargeur rapide 2 ports pour voiture. Compatible avec tous les smartphones. Sécurité garantie.",
+                description: "Chargeur rapide 2 ports pour voiture",
                 price: 25000,
                 category: 'accessories',
                 image: '🔌',
@@ -4021,19 +4161,12 @@
                 featured: true,
                 preparationTime: 0,
                 stock: 20,
-                partner: null,
-                details: {
-                    specifications: ["2 ports USB", "Charge rapide 3.0", "Protection surtension", "Câble inclus"],
-                    power: "24W",
-                    compatibility: "Tous smartphones",
-                    warranty: "1 an"
-                },
-                images: ['🔌', 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop']
+                partner: null
             },
             {
                 id: 6,
                 name: "Support Téléphone",
-                description: "Support universel pour GPS et téléphone. Installation facile sur tableau de bord ou ventilation.",
+                description: "Support pour GPS et téléphone",
                 price: 15000,
                 category: 'accessories',
                 image: '📱',
@@ -4041,20 +4174,12 @@
                 featured: false,
                 preparationTime: 0,
                 stock: 35,
-                partner: null,
-                details: {
-                    specifications: ["Support universel", "Rotation 360°", "Installation ventouse/grille"],
-                    material: "Plastique ABS",
-                    compatibility: "Tous téléphones 4-7 pouces",
-                    warranty: "6 mois"
-                },
-                images: ['📱', 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop']
+                partner: null
             },
-            // Produits Partenaires
             {
                 id: 7,
                 name: "Pack Partenaire Gold",
-                description: "Abonnement premium avec avantages exclusifs pour les chauffeurs VTC. Augmentez vos revenus !",
+                description: "Abonnement premium avec avantages exclusifs",
                 price: 50000,
                 category: 'partners',
                 image: '🏆',
@@ -4066,23 +4191,14 @@
                 benefits: [
                     "10% de réduction sur toutes les courses",
                     "Livraison gratuite",
-                    "Support prioritaire 24/7",
-                    "Accès aux événements exclusifs",
-                    "Formations gratuites",
-                    "Assistance juridique"
-                ],
-                details: {
-                    duration: "1 mois",
-                    renewal: "Automatique",
-                    cancellation: "À tout moment",
-                    conditions: ["Pour chauffeurs actifs", "Minimum 20 courses/mois"]
-                },
-                images: ['🏆', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop']
+                    "Support prioritaire",
+                    "Accès aux événements exclusifs"
+                ]
             },
             {
                 id: 8,
                 name: "Formation Chauffeur Pro",
-                description: "Formation certifiée pour chauffeurs VTC. Développez vos compétences et augmentez vos revenus.",
+                description: "Formation certifiée pour chauffeurs VTC",
                 price: 150000,
                 category: 'partners',
                 image: '📚',
@@ -4092,24 +4208,16 @@
                 stock: 50,
                 partner: "Académie VTC",
                 benefits: [
-                    "Certification reconnue nationalement",
+                    "Certification reconnue",
                     "Support après formation",
-                    "Accès à la communauté exclusive",
-                    "Placement garanti chez nos partenaires",
-                    "Manuel du chauffeur professionnel"
-                ],
-                details: {
-                    duration: "3 jours",
-                    format: "Présentiel/En ligne",
-                    certificate: "Oui, reconnu",
-                    prerequisites: ["Permis B valide", "Casier judiciaire vierge"]
-                },
-                images: ['📚', 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop']
+                    "Accès à la communauté",
+                    "Placement garanti"
+                ]
             },
             {
                 id: 9,
                 name: "Assurance Véhicule",
-                description: "Assurance tous risques pour chauffeurs VTC. Couverture complète et assistance 24/7.",
+                description: "Assurance tous risques pour chauffeurs",
                 price: 300000,
                 category: 'partners',
                 image: '🛡️',
@@ -4119,19 +4227,11 @@
                 stock: 30,
                 partner: "AssurMad",
                 benefits: [
-                    "Couverture complète tous risques",
-                    "Assistance 24h/24 et 7j/7",
-                    "Dépannage rapide sur toute l'île",
-                    "Garantie à l'étranger",
-                    "Remboursement sous 48h"
-                ],
-                details: {
-                    coverage: ["Responsabilité civile", "Dommages collision", "Vol", "Incendie", "Assistance"],
-                    duration: "1 an",
-                    franchise: "50 000 Ar",
-                    extensions: ["Passagers", "Bagages"]
-                },
-                images: ['🛡️', 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop']
+                    "Couverture complète",
+                    "Assistance 24/7",
+                    "Dépannage rapide",
+                    "Garantie à l'étranger"
+                ]
             }
         ];
 
@@ -4221,6 +4321,7 @@
                 isFollowing: false,
                 isDriver: false,
                 isAdmin: false,
+                isRealUser: true,
                 joinDate: "2023-01-15",
                 status: 'active',
                 lastLogin: "2024-12-20 10:30"
@@ -4239,6 +4340,7 @@
                 isFollowing: true,
                 isDriver: true,
                 isAdmin: false,
+                isRealUser: true,
                 joinDate: "2022-08-20",
                 status: 'active',
                 lastLogin: "2024-12-20 09:15"
@@ -4257,6 +4359,7 @@
                 isFollowing: false,
                 isDriver: true,
                 isAdmin: false,
+                isRealUser: true,
                 joinDate: "2023-03-10",
                 status: 'active',
                 lastLogin: "2024-12-19 14:20"
@@ -4275,6 +4378,7 @@
                 isFollowing: false,
                 isDriver: false,
                 isAdmin: true,
+                isRealUser: true,
                 joinDate: "2022-01-01",
                 status: 'active',
                 lastLogin: "2024-12-20 11:45"
@@ -4341,6 +4445,26 @@
                 location: "Aéroport Mahajanga",
                 tags: ["Promotion", "Aéroport"],
                 status: 'active'
+            },
+            {
+                id: 4,
+                userId: 4,
+                userName: "Admin VTC",
+                userAvatar: "👑",
+                content: "🎉 NOUVEAUTÉ ! La boutique VTC Mahajanga est maintenant ouverte ! Commandez nourriture, accessoires et produits partenaires. Livraison rapide partout à Mahajanga. 🛍️🚗",
+                media: [{
+                    type: 'image',
+                    url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop',
+                    aspectRatio: '16:9'
+                }],
+                likes: 156,
+                comments: 32,
+                shares: 18,
+                isLiked: false,
+                timestamp: "Aujourd'hui",
+                location: "VTC Mahajanga",
+                tags: ["Nouveauté", "Boutique", "Livraison"],
+                status: 'active'
             }
         ];
 
@@ -4392,6 +4516,7 @@
             initializeApp();
             setupPWA();
             setupVideoHandlers();
+            setupMapControls();
         });
 
         function initializeApp() {
@@ -4404,17 +4529,17 @@
             loadNews();
             renderProducts();
             renderPosts();
+            renderRecentPosts();
             renderDriversList();
             renderConversations();
+            renderSuggestedUsers();
             
-            // Démarrer les mises à jour en temps réel
             startRealTimeUpdates();
-            
-            // Vérifier la géolocalisation
             checkGeolocation();
+            simulateMessages();
             
-            // Initialiser les vidéos
             setTimeout(initVideoPlayers, 500);
+            updateMessagesCount();
         }
 
         function loadSampleData() {
@@ -4425,24 +4550,14 @@
             AppState.news = SAMPLE_NEWS;
             AppState.adminData.users = SAMPLE_USERS;
             AppState.adminData.drivers = SAMPLE_DRIVERS;
-            AppState.adminData.products = SAMPLE_PRODUCTS;
             AppState.adminData.posts = SAMPLE_POSTS;
             
-            // Charger depuis localStorage
             loadFromLocalStorage();
-            
-            // Initialiser les conversations
-            if (AppState.conversations.length === 0) {
-                initializeConversations();
-            }
-            
             updateNotifications();
             updateAdminStats();
-            updateMessagesBadge();
         }
 
         function loadFromLocalStorage() {
-            // Panier
             const savedCart = localStorage.getItem('vtc_cart');
             if (savedCart) {
                 try {
@@ -4453,11 +4568,9 @@
                 }
             }
             
-            // Portefeuille
             const savedWallet = localStorage.getItem('vtc_wallet');
             AppState.wallet = savedWallet ? parseInt(savedWallet) : 10000;
             
-            // Commandes
             const savedOrders = localStorage.getItem('vtc_orders');
             if (savedOrders) {
                 try {
@@ -4470,7 +4583,6 @@
                 }
             }
             
-            // Notifications
             const savedNotifications = localStorage.getItem('vtc_notifications');
             if (savedNotifications) {
                 try {
@@ -4481,7 +4593,6 @@
                 }
             }
             
-            // Utilisateur
             const savedUser = localStorage.getItem('vtc_user');
             if (savedUser) {
                 try {
@@ -4492,7 +4603,6 @@
                 }
             }
             
-            // Conversations
             const savedConversations = localStorage.getItem('vtc_conversations');
             if (savedConversations) {
                 try {
@@ -4563,7 +4673,6 @@
 
         // ===== UI INITIALIZATION =====
         function initializeUI() {
-            // Navigation
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     const page = this.dataset.page;
@@ -4571,7 +4680,6 @@
                 });
             });
 
-            // Authentification
             document.getElementById('auth-btn').addEventListener('click', handleAuth);
             document.getElementById('toggle-auth-mode').addEventListener('click', toggleAuthMode);
             
@@ -4584,22 +4692,38 @@
                 }
             });
 
-            // Map controls
             document.getElementById('locate-me-btn').addEventListener('click', locateUser);
             document.getElementById('center-mj-btn').addEventListener('click', centerMapOnMahajanga);
             document.getElementById('refresh-map-btn').addEventListener('click', refreshMap);
+            document.getElementById('toggle-radius-btn').addEventListener('click', toggleRadius);
 
-            // Transport
             document.getElementById('pickup-input').addEventListener('input', updateRideEstimate);
             document.getElementById('destination-input').addEventListener('input', updateRideEstimate);
             
-            // Charger les produits
             updateCartUI();
             updateWalletUI();
+            
+            const publishBtn = document.getElementById('publish-post-btn');
+            if (publishBtn) {
+                publishBtn.addEventListener('click', function(e) {
+                    if (AppState.isPosting) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showNotification('Veuillez patienter...', 'warning');
+                        return false;
+                    }
+                });
+            }
+        }
+
+        function setupMapControls() {
+            const toggleBtn = document.getElementById('toggle-radius-btn');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleRadius);
+            }
         }
 
         function setupVideoHandlers() {
-            // Détecter les changements de page pour réinitialiser les vidéos
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -4612,7 +4736,6 @@
                 });
             });
 
-            // Observer les pages
             document.querySelectorAll('.page').forEach(page => {
                 observer.observe(page, { attributes: true });
             });
@@ -4624,13 +4747,11 @@
                 const videoId = `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 video.id = videoId;
                 
-                // Activer les contrôles natifs pour mobile
                 video.controls = true;
                 video.playsInline = true;
                 video.muted = true;
                 video.preload = "metadata";
                 
-                // Détecter l'orientation
                 video.addEventListener('loadedmetadata', function() {
                     const isVertical = this.videoHeight > this.videoWidth;
                     const container = this.closest('.post-media');
@@ -4650,19 +4771,15 @@
                     }
                 });
                 
-                // Gérer la lecture automatique quand visible
                 const videoObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            // Démarrer la lecture si la vidéo est visible
                             if (video.paused) {
                                 video.play().catch(e => {
-                                    // Autoplay bloqué, on ne fait rien
                                     console.log('Autoplay prevented:', e);
                                 });
                             }
                         } else {
-                            // Mettre en pause si la vidéo n'est plus visible
                             if (!video.paused) {
                                 video.pause();
                             }
@@ -4674,25 +4791,201 @@
                 });
                 
                 videoObserver.observe(video);
-                
-                // Stocker l'observateur
                 AppState.videoPlayers.set(videoId, videoObserver);
                 
-                // Gérer les erreurs de chargement
                 video.addEventListener('error', function() {
                     console.error('Erreur de chargement vidéo:', this.src);
                     this.poster = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23000"/><text x="200" y="150" text-anchor="middle" fill="white" font-family="Arial" font-size="16">Vidéo non disponible</text></svg>';
                 });
                 
-                // Gérer le volume automatique
                 video.addEventListener('play', function() {
-                    // Activer le son après interaction utilisateur
                     if (this.muted) {
                         this.muted = false;
                         this.volume = 0.5;
                     }
                 });
+                
+                // Ajouter le bouton plein écran
+                addFullscreenButton(video);
             });
+        }
+
+        function addFullscreenButton(video) {
+            const container = video.parentElement;
+            if (!container) return;
+            
+            const fullscreenBtn = document.createElement('button');
+            fullscreenBtn.className = 'video-control-btn';
+            fullscreenBtn.style.cssText = `
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(0, 0, 0, 0.7);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                cursor: pointer;
+                z-index: 5;
+                backdrop-filter: blur(10px);
+            `;
+            fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+            fullscreenBtn.title = 'Plein écran';
+            
+            fullscreenBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openFullscreenVideo(video);
+            });
+            
+            container.appendChild(fullscreenBtn);
+        }
+
+        function openFullscreenVideo(video) {
+            const fullscreenVideo = document.getElementById('fullscreen-video');
+            const fullscreenPlayer = document.getElementById('fullscreen-video-player');
+            
+            // Trouver le post parent
+            const postElement = video.closest('.post-card');
+            if (!postElement) return;
+            
+            const postId = Array.from(postElement.parentElement.children).indexOf(postElement);
+            const currentPost = AppState.posts[postId];
+            
+            if (!currentPost || !currentPost.media || currentPost.media.length === 0) return;
+            
+            AppState.fullscreenVideoIndex = 0;
+            AppState.currentVideoPostId = postId;
+            
+            fullscreenPlayer.src = currentPost.media[0].url;
+            fullscreenPlayer.load();
+            
+            fullscreenVideo.classList.add('active');
+            
+            // Mettre à jour les boutons de navigation
+            updateVideoNavigationButtons();
+            
+            // Jouer automatiquement
+            setTimeout(() => {
+                fullscreenPlayer.play().catch(e => {
+                    console.log('Autoplay prevented:', e);
+                });
+            }, 300);
+            
+            // Écouter les événements de lecture
+            fullscreenPlayer.addEventListener('play', () => {
+                AppState.fullscreenVideoIsPlaying = true;
+                updateFullscreenControls();
+            });
+            
+            fullscreenPlayer.addEventListener('pause', () => {
+                AppState.fullscreenVideoIsPlaying = false;
+                updateFullscreenControls();
+            });
+            
+            fullscreenPlayer.addEventListener('volumechange', () => {
+                AppState.fullscreenVideoIsMuted = fullscreenPlayer.muted;
+                updateFullscreenControls();
+            });
+        }
+
+        function closeFullscreenVideo() {
+            const fullscreenVideo = document.getElementById('fullscreen-video');
+            const fullscreenPlayer = document.getElementById('fullscreen-video-player');
+            
+            fullscreenPlayer.pause();
+            fullscreenVideo.classList.remove('active');
+            fullscreenPlayer.src = '';
+            
+            AppState.fullscreenVideoIndex = -1;
+            AppState.currentVideoPostId = null;
+        }
+
+        function showPreviousVideo() {
+            if (AppState.currentVideoPostId === null) return;
+            
+            const currentPost = AppState.posts[AppState.currentVideoPostId];
+            if (!currentPost || !currentPost.media) return;
+            
+            AppState.fullscreenVideoIndex--;
+            if (AppState.fullscreenVideoIndex < 0) {
+                AppState.fullscreenVideoIndex = currentPost.media.length - 1;
+            }
+            
+            const fullscreenPlayer = document.getElementById('fullscreen-video-player');
+            fullscreenPlayer.src = currentPost.media[AppState.fullscreenVideoIndex].url;
+            fullscreenPlayer.load();
+            fullscreenPlayer.play();
+            
+            updateVideoNavigationButtons();
+        }
+
+        function showNextVideo() {
+            if (AppState.currentVideoPostId === null) return;
+            
+            const currentPost = AppState.posts[AppState.currentVideoPostId];
+            if (!currentPost || !currentPost.media) return;
+            
+            AppState.fullscreenVideoIndex++;
+            if (AppState.fullscreenVideoIndex >= currentPost.media.length) {
+                AppState.fullscreenVideoIndex = 0;
+            }
+            
+            const fullscreenPlayer = document.getElementById('fullscreen-video-player');
+            fullscreenPlayer.src = currentPost.media[AppState.fullscreenVideoIndex].url;
+            fullscreenPlayer.load();
+            fullscreenPlayer.play();
+            
+            updateVideoNavigationButtons();
+        }
+
+        function updateVideoNavigationButtons() {
+            if (AppState.currentVideoPostId === null) return;
+            
+            const currentPost = AppState.posts[AppState.currentVideoPostId];
+            if (!currentPost || !currentPost.media) return;
+            
+            const prevBtn = document.getElementById('prev-video-btn');
+            const nextBtn = document.getElementById('next-video-btn');
+            
+            if (currentPost.media.length <= 1) {
+                prevBtn.classList.add('disabled');
+                nextBtn.classList.add('disabled');
+            } else {
+                prevBtn.classList.remove('disabled');
+                nextBtn.classList.remove('disabled');
+            }
+        }
+
+        function toggleFullscreenVideoPlay() {
+            const fullscreenPlayer = document.getElementById('fullscreen-video-player');
+            if (fullscreenPlayer.paused) {
+                fullscreenPlayer.play();
+            } else {
+                fullscreenPlayer.pause();
+            }
+        }
+
+        function toggleFullscreenVideoMute() {
+            const fullscreenPlayer = document.getElementById('fullscreen-video-player');
+            fullscreenPlayer.muted = !fullscreenPlayer.muted;
+        }
+
+        function updateFullscreenControls() {
+            const playIcon = document.getElementById('fullscreen-play-icon');
+            const volumeIcon = document.getElementById('fullscreen-volume-icon');
+            
+            if (playIcon) {
+                playIcon.className = AppState.fullscreenVideoIsPlaying ? 'fas fa-pause' : 'fas fa-play';
+            }
+            
+            if (volumeIcon) {
+                volumeIcon.className = AppState.fullscreenVideoIsMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+            }
         }
 
         function pauseAllVideos() {
@@ -4797,15 +5090,12 @@
             
             if (!foodContainer || !accessoriesContainer || !partnerContainer) return;
             
-            // Nourriture
             const foodProducts = AppState.products.filter(p => p.category === 'food');
             foodContainer.innerHTML = foodProducts.map(product => createProductHTML(product)).join('');
             
-            // Accessoires
             const accessoryProducts = AppState.products.filter(p => p.category === 'accessories');
             accessoriesContainer.innerHTML = accessoryProducts.map(product => createProductHTML(product)).join('');
             
-            // Partenaires
             const partnerProducts = AppState.products.filter(p => p.category === 'partners');
             partnerContainer.innerHTML = partnerProducts.map(product => createProductHTML(product)).join('');
         }
@@ -4820,7 +5110,7 @@
             
             return `
                 <div class="product-card ${product.featured ? 'featured' : ''} ${isPartner ? 'partner-product' : ''}" 
-                     onclick="showProductDetail(${product.id})">
+                     onclick="${isPartner ? `showPartnerProductDetail(${product.id})` : `showProductDetail(${product.id})`}">
                     ${badgeText ? `<div class="${badgeClass}">${badgeText}</div>` : ''}
                     <div class="${imageClass}">
                         ${product.image}
@@ -4869,217 +5159,144 @@
             const product = AppState.products.find(p => p.id === productId);
             if (!product) return;
             
-            document.getElementById('product-detail-title').textContent = product.name;
+            const modalHTML = `
+                <div class="modal-overlay" id="product-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="card-title">
+                                <i class="fas fa-info-circle"></i>
+                                <span>${product.name}</span>
+                            </div>
+                            <button class="modal-close" onclick="closeProductModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="text-center mb-4">
+                            <div class="product-image" style="width: 100px; height: 100px; margin: 0 auto;">
+                                ${product.image}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <h3>${product.name}</h3>
+                            <p class="text-muted">${product.description}</p>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Prix:</span>
+                                <span class="product-price">${formatPrice(product.price)}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Note:</span>
+                                <span class="product-rating">
+                                    ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                                    (${product.rating})
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Temps de préparation:</span>
+                                <span>${product.preparationTime} min</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Stock:</span>
+                                <span>${product.stock} unités</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-shop btn-block" onclick="addToCart(${product.id}); closeProductModal();">
+                            <i class="fas fa-cart-plus"></i>
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            `;
             
-            const content = document.getElementById('product-detail-content');
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function showPartnerProductDetail(productId) {
+            const product = AppState.products.find(p => p.id === productId);
+            if (!product) return;
             
-            const isPartner = product.category === 'partners';
-            const priceClass = isPartner ? 'product-price partner' : 'product-price';
+            document.getElementById('partner-product-title').textContent = product.name;
             
-            let detailsHTML = '';
-            if (product.details) {
-                if (product.category === 'food') {
-                    detailsHTML = `
-                        <div class="product-detail-meta">
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Calories</div>
-                                <div class="product-meta-value">${product.details.calories || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Poids</div>
-                                <div class="product-meta-value">${product.details.weight || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Préparation</div>
-                                <div class="product-meta-value">${product.preparationTime} min</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Stock</div>
-                                <div class="product-meta-value">${product.stock} unités</div>
-                            </div>
-                        </div>
-                        
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <i class="fas fa-list"></i>
-                                    <span>Ingrédients</span>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                ${product.details.ingredients ? product.details.ingredients.map(ing => `
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <i class="fas fa-check-circle" style="color: var(--success); font-size: 12px;"></i>
-                                        <span>${ing}</span>
-                                    </div>
-                                `).join('') : 'Aucune information'}
-                            </div>
-                        </div>
-                        
-                        ${product.details.allergens ? `
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <div class="card-title">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <span>Allergènes</span>
-                                    </div>
-                                </div>
-                                <div class="p-3">
-                                    ${product.details.allergens.map(allergen => `
-                                        <span class="order-status status-pending" style="margin-right: 8px; margin-bottom: 8px; display: inline-block;">
-                                            ${allergen}
-                                        </span>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-                    `;
-                } else if (product.category === 'accessories') {
-                    detailsHTML = `
-                        <div class="product-detail-meta">
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Garantie</div>
-                                <div class="product-meta-value">${product.details.warranty || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Puissance</div>
-                                <div class="product-meta-value">${product.details.power || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Compatibilité</div>
-                                <div class="product-meta-value">${product.details.compatibility || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Stock</div>
-                                <div class="product-meta-value">${product.stock} unités</div>
-                            </div>
-                        </div>
-                        
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <i class="fas fa-list"></i>
-                                    <span>Spécifications</span>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                ${product.details.specifications ? product.details.specifications.map(spec => `
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <i class="fas fa-check" style="color: var(--primary); font-size: 12px;"></i>
-                                        <span>${spec}</span>
-                                    </div>
-                                `).join('') : 'Aucune information'}
-                            </div>
-                        </div>
-                    `;
-                } else if (product.category === 'partners') {
-                    detailsHTML = `
-                        <div class="product-detail-meta">
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Durée</div>
-                                <div class="product-meta-value">${product.details.duration || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Renouvellement</div>
-                                <div class="product-meta-value">${product.details.renewal || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Annulation</div>
-                                <div class="product-meta-value">${product.details.cancellation || 'N/A'}</div>
-                            </div>
-                            <div class="product-meta-item">
-                                <div class="product-meta-label">Stock</div>
-                                <div class="product-meta-value">${product.stock} unités</div>
-                            </div>
-                        </div>
-                        
-                        ${product.benefits ? `
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <div class="card-title">
-                                        <i class="fas fa-gift"></i>
-                                        <span>Avantages inclus</span>
-                                    </div>
-                                </div>
-                                <div class="p-3">
-                                    ${product.benefits.map(benefit => `
-                                        <div class="benefit-item mb-2">
-                                            <i class="fas fa-check-circle"></i>
-                                            <span>${benefit}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        ${product.details.conditions ? `
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <div class="card-title">
-                                        <i class="fas fa-clipboard-check"></i>
-                                        <span>Conditions</span>
-                                    </div>
-                                </div>
-                                <div class="p-3">
-                                    ${product.details.conditions.map(condition => `
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <i class="fas fa-info-circle" style="color: var(--warning); font-size: 12px;"></i>
-                                            <span>${condition}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-                    `;
-                }
-            }
-            
+            const content = document.getElementById('partner-product-content');
             content.innerHTML = `
-                <div class="product-detail-image">
-                    ${product.image}
+                <div class="text-center mb-4">
+                    <div class="product-image partner" style="width: 120px; height: 120px; margin: 0 auto; font-size: 48px;">
+                        ${product.image}
+                        <div class="partner-badge">
+                            <i class="fas fa-handshake"></i> ${product.partner}
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="mb-4">
                     <h3>${product.name}</h3>
-                    <div class="product-detail-description">
-                        ${product.description}
+                    <p class="text-muted">${product.description}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Prix:</span>
+                        <span class="product-price partner" style="font-size: 24px;">${formatPrice(product.price)}</span>
                     </div>
                     
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <div class="${priceClass}" style="font-size: 24px;">${formatPrice(product.price)}</div>
-                            <div class="product-rating">
-                                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
-                                (${product.rating})
-                            </div>
-                        </div>
-                        <div class="text-muted">
-                            ${product.preparationTime > 0 ? `Préparation: ${product.preparationTime} min` : 'Disponible immédiatement'}
-                        </div>
+                        <span class="text-muted">Note:</span>
+                        <span class="product-rating">
+                            ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                            (${product.rating})
+                        </span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Stock:</span>
+                        <span>${product.stock} unités disponibles</span>
                     </div>
                 </div>
                 
-                ${detailsHTML}
+                ${product.benefits ? `
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-gift"></i>
+                                <span>Avantages inclus</span>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            ${product.benefits.map(benefit => `
+                                <div class="benefit-item mb-2">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>${benefit}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
                 
                 <div class="d-flex gap-2">
-                    <button class="btn ${isPartner ? 'btn-partner' : 'btn-shop'} flex-1" onclick="addToCart(${product.id}); closeProductDetailModal();">
+                    <button class="btn btn-partner flex-1" onclick="addToCart(${product.id}); closePartnerProductModal();">
                         <i class="fas fa-cart-plus"></i>
                         Ajouter au panier
                     </button>
-                    ${AppState.isAdmin ? `
-                        <button class="btn btn-warning flex-1" onclick="editProduct(${product.id})">
-                            <i class="fas fa-edit"></i>
-                            Modifier
-                        </button>
-                    ` : ''}
+                    <button class="btn btn-primary flex-1" onclick="closePartnerProductModal(); showPage('home');">
+                        <i class="fas fa-home"></i>
+                        Accueil
+                    </button>
                 </div>
             `;
             
-            document.getElementById('product-detail-modal').classList.remove('hidden');
+            document.getElementById('partner-product-modal').classList.remove('hidden');
         }
 
-        function closeProductDetailModal() {
-            document.getElementById('product-detail-modal').classList.add('hidden');
+        function closePartnerProductModal() {
+            document.getElementById('partner-product-modal').classList.add('hidden');
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('product-modal');
+            if (modal) {
+                modal.remove();
+            }
         }
 
         function addToCart(productId) {
@@ -5155,8 +5372,6 @@
             updateCartItems();
             updateOrderSummary();
             updateModalCart();
-            
-            // Calculer le prix de livraison
             calculateDeliveryPrice();
         }
 
@@ -5220,8 +5435,6 @@
 
         function calculateDeliveryPrice() {
             const subtotal = AppState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            // Livraison gratuite pour les partenaires
             const hasPartnerProduct = AppState.cart.some(item => item.category === 'partners');
             
             if (hasPartnerProduct) {
@@ -5609,116 +5822,187 @@
             
             container.innerHTML = '';
             
-            AppState.posts.forEach(post => {
+            // Filtrer les posts pour n'afficher que ceux des vrais utilisateurs
+            const realUserPosts = AppState.posts.filter(post => {
+                const user = AppState.users.find(u => u.id === post.userId);
+                return user && user.isRealUser === true;
+            });
+            
+            realUserPosts.forEach(post => {
                 const user = AppState.users.find(u => u.id === post.userId);
                 if (!user) return;
                 
                 const postElement = document.createElement('div');
                 postElement.className = 'post-card';
-                
-                // Construction du média
-                let mediaHTML = '';
-                if (post.media && post.media.length > 0) {
-                    const media = post.media[0];
-                    if (media.type === 'video') {
-                        const isVertical = media.aspectRatio === '9:16';
-                        mediaHTML = `
-                            <div class="post-media ${isVertical ? 'vertical-video-container' : ''}">
-                                <video 
-                                    controls 
-                                    playsinline 
-                                    ${isVertical ? 'class="vertical-video"' : ''}
-                                    poster="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='${isVertical ? '700' : '300'}' viewBox='0 0 400 ${isVertical ? '700' : '300'}'><rect width='400' height='${isVertical ? '700' : '300'}' fill='%23000'/><text x='200' y='${isVertical ? '350' : '150'}' text-anchor='middle' fill='white' font-family='Arial' font-size='16'>Chargement...</text></svg>">
-                                    <source src="${media.url}" type="video/mp4">
-                                    Votre navigateur ne supporte pas la vidéo.
-                                </video>
-                            </div>
-                        `;
-                    } else {
-                        mediaHTML = `
-                            <div class="post-media">
-                                <img src="${media.url}" alt="Image post" loading="lazy">
-                            </div>
-                        `;
-                    }
-                }
-                
-                postElement.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-user-avatar" onclick="showUserProfile(${user.id})">
-                            ${user.avatar}
-                        </div>
-                        <div class="post-user-info">
-                            <div class="post-user-name" onclick="showUserProfile(${user.id})">
-                                ${user.name}
-                            </div>
-                            <div class="post-time">
-                                ${post.timestamp} • ${post.location}
-                            </div>
-                        </div>
-                        <div class="post-actions">
-                            <div class="post-action" onclick="reportPost(${post.id})">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="post-content">
-                        <div class="post-text">
-                            ${formatPostContent(post.content)}
-                        </div>
-                        
-                        ${post.tags && post.tags.length > 0 ? `
-                            <div class="post-tags mt-2">
-                                ${post.tags.map(tag => `<span class="post-tag">#${tag}</span>`).join(' ')}
-                            </div>
-                        ` : ''}
-                        
-                        ${mediaHTML}
-                    </div>
-                    
-                    <div class="post-stats">
-                        <div>${post.likes} mentions J'aime</div>
-                        <div>${post.comments} commentaires</div>
-                        <div>${post.shares} partages</div>
-                    </div>
-                    
-                    <div class="post-actions">
-                        <div class="post-action ${post.isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
-                            <i class="fas fa-heart"></i>
-                            <span>J'aime</span>
-                        </div>
-                        <div class="post-action" onclick="focusComment(${post.id})">
-                            <i class="fas fa-comment"></i>
-                            <span>Commenter</span>
-                        </div>
-                        <div class="post-action" onclick="sharePost(${post.id})">
-                            <i class="fas fa-share"></i>
-                            <span>Partager</span>
-                        </div>
-                    </div>
-                    
-                    <div class="post-comments" id="comments-${post.id}">
-                        <div class="comment-form">
-                            <div class="user-avatar" style="width: 30px; height: 30px; font-size: 12px;">
-                                ${AppState.currentUser ? AppState.currentUser.avatar : '👤'}
-                            </div>
-                            <input type="text" 
-                                   class="comment-input" 
-                                   placeholder="Ajouter un commentaire..."
-                                   onkeypress="if(event.key === 'Enter') addComment(${post.id}, this)">
-                            <button class="comment-send-btn" onclick="addComment(${post.id}, this.previousElementSibling)">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
+                postElement.innerHTML = createPostHTML(post, user);
                 container.appendChild(postElement);
             });
             
-            // Réinitialiser les vidéos après le rendu
             setTimeout(initVideoPlayers, 100);
+        }
+
+        function renderRecentPosts() {
+            const container = document.getElementById('recent-posts-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Filtrer les posts pour n'afficher que ceux des vrais utilisateurs
+            const realUserPosts = AppState.posts.filter(post => {
+                const user = AppState.users.find(u => u.id === post.userId);
+                return user && user.isRealUser === true;
+            }).slice(0, CONFIG.MAX_POSTS_HOME);
+            
+            if (realUserPosts.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted p-4">
+                        <i class="fas fa-newspaper" style="font-size: 36px; margin-bottom: var(--space-sm);"></i>
+                        <div>Aucune publication récente</div>
+                        <button class="btn btn-primary mt-3" onclick="showPage('social')">
+                            <i class="fas fa-plus"></i>
+                            Créer une publication
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            realUserPosts.forEach(post => {
+                const user = AppState.users.find(u => u.id === post.userId);
+                if (!user) return;
+                
+                const postElement = document.createElement('div');
+                postElement.className = 'post-card';
+                postElement.innerHTML = createPostHTML(post, user, true);
+                container.appendChild(postElement);
+            });
+        }
+
+        function createPostHTML(post, user, isCompact = false) {
+            let mediaHTML = '';
+            if (post.media && post.media.length > 0) {
+                const media = post.media[0];
+                if (media.type === 'video') {
+                    const isVertical = media.aspectRatio === '9:16';
+                    mediaHTML = `
+                        <div class="post-media ${isVertical ? 'vertical-video-container' : ''}">
+                            <video 
+                                controls 
+                                playsinline 
+                                ${isVertical ? 'class="vertical-video"' : ''}
+                                poster="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='${isVertical ? '700' : '300'}' viewBox='0 0 400 ${isVertical ? '700' : '300'}'><rect width='400' height='${isVertical ? '700' : '300'}' fill='%23000'/><text x='200' y='${isVertical ? '350' : '150'}' text-anchor='middle' fill='white' font-family='Arial' font-size='16'>Chargement...</text></svg>">
+                                <source src="${media.url}" type="video/mp4">
+                                Votre navigateur ne supporte pas la vidéo.
+                            </video>
+                        </div>
+                    `;
+                } else {
+                    mediaHTML = `
+                        <div class="post-media">
+                            <img src="${media.url}" alt="Image post" loading="lazy">
+                        </div>
+                    `;
+                }
+            }
+            
+            let badgeHTML = '';
+            if (user.isAdmin) {
+                badgeHTML = '<span class="admin-badge"><i class="fas fa-crown"></i> Admin</span>';
+            } else if (user.isDriver) {
+                badgeHTML = '<span class="driver-badge"><i class="fas fa-car"></i> Chauffeur</span>';
+            } else if (user.isRealUser) {
+                badgeHTML = '<span class="real-user-badge"><i class="fas fa-user-check"></i> Vrai utilisateur</span>';
+            }
+            
+            const compactHTML = isCompact ? `
+                <div class="post-text">
+                    ${post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content}
+                </div>
+                ${mediaHTML ? mediaHTML : ''}
+                <div class="post-stats mt-2">
+                    <div>${post.likes} ❤️</div>
+                    <div>${post.comments} 💬</div>
+                    <div>${post.shares} 🔄</div>
+                </div>
+            ` : `
+                <div class="post-text">
+                    ${formatPostContent(post.content)}
+                </div>
+                
+                ${post.tags && post.tags.length > 0 ? `
+                    <div class="post-tags mt-2">
+                        ${post.tags.map(tag => `<span class="post-tag">#${tag}</span>`).join(' ')}
+                    </div>
+                ` : ''}
+                
+                ${mediaHTML}
+                
+                <div class="post-stats">
+                    <div>${post.likes} mentions J'aime</div>
+                    <div>${post.comments} commentaires</div>
+                    <div>${post.shares} partages</div>
+                </div>
+                
+                <div class="post-actions">
+                    <div class="post-action ${post.isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                        <i class="fas fa-heart"></i>
+                        <span>J'aime</span>
+                    </div>
+                    <div class="post-action" onclick="focusComment(${post.id})">
+                        <i class="fas fa-comment"></i>
+                        <span>Commenter</span>
+                    </div>
+                    <div class="post-action message" onclick="sendMessageToUser(${user.id})">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Message</span>
+                    </div>
+                    <div class="post-action" onclick="sharePost(${post.id})">
+                        <i class="fas fa-share"></i>
+                        <span>Partager</span>
+                    </div>
+                </div>
+                
+                <div class="post-comments" id="comments-${post.id}">
+                    <div class="comment-form">
+                        <div class="user-avatar" style="width: 30px; height: 30px; font-size: 12px;">
+                            ${AppState.currentUser ? AppState.currentUser.avatar : '👤'}
+                        </div>
+                        <input type="text" 
+                               class="comment-input" 
+                               placeholder="Ajouter un commentaire..."
+                               onkeypress="if(event.key === 'Enter') addComment(${post.id}, this)">
+                        <button class="comment-send-btn" onclick="addComment(${post.id}, this.previousElementSibling)">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return `
+                <div class="post-header">
+                    <div class="post-user-avatar" onclick="showUserProfile(${user.id})">
+                        ${user.avatar}
+                    </div>
+                    <div class="post-user-info">
+                        <div class="post-user-name" onclick="showUserProfile(${user.id})">
+                            ${user.name}
+                            ${badgeHTML}
+                        </div>
+                        <div class="post-time">
+                            ${post.timestamp} • ${post.location}
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action" onclick="reportPost(${post.id})">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    ${compactHTML}
+                </div>
+            `;
         }
 
         function formatPostContent(content) {
@@ -5728,6 +6012,20 @@
         }
 
         function createPost() {
+            const now = Date.now();
+            const timeSinceLastPost = now - AppState.lastPostTime;
+            
+            if (AppState.isPosting) {
+                showNotification('Publication en cours, veuillez patienter...', 'warning');
+                return;
+            }
+            
+            if (timeSinceLastPost < AppState.POST_COOLDOWN) {
+                const remainingTime = Math.ceil((AppState.POST_COOLDOWN - timeSinceLastPost) / 1000);
+                showNotification(`Veuillez patienter ${remainingTime} secondes avant de publier à nouveau`, 'warning');
+                return;
+            }
+            
             const textInput = document.getElementById('post-text-input');
             const content = textInput.value.trim();
             
@@ -5736,43 +6034,62 @@
                 return;
             }
             
-            const postMedia = AppState.uploadedMedia.map(media => ({
-                type: media.type,
-                url: media.url,
-                aspectRatio: media.type === 'video' ? '9:16' : '16:9'
-            }));
+            AppState.isPosting = true;
+            AppState.lastPostTime = now;
             
-            const newPost = {
-                id: Date.now(),
-                userId: AppState.currentUser ? AppState.currentUser.id : 1,
-                userName: AppState.currentUser ? AppState.currentUser.name : 'Utilisateur',
-                userAvatar: AppState.currentUser ? AppState.currentUser.avatar : '👤',
-                content: content,
-                media: postMedia,
-                likes: 0,
-                comments: 0,
-                shares: 0,
-                isLiked: false,
-                timestamp: "À l'instant",
-                location: "Mahajanga",
-                tags: extractTags(content),
-                status: 'active'
-            };
-            
-            AppState.posts.unshift(newPost);
-            AppState.adminData.posts.unshift(newPost);
-            renderPosts();
-            
-            textInput.value = '';
-            AppState.uploadedMedia = [];
-            document.getElementById('media-preview').innerHTML = '';
-            
-            showNotification('Publication créée avec succès!', 'success');
-            
-            if (AppState.currentUser) {
-                updatePostCount();
-                updateAdminStats();
+            const publishBtn = document.getElementById('publish-post-btn');
+            if (publishBtn) {
+                publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publication...';
+                publishBtn.disabled = true;
             }
+            
+            setTimeout(() => {
+                const postMedia = AppState.uploadedMedia.map(media => ({
+                    type: media.type,
+                    url: media.url,
+                    aspectRatio: media.type === 'video' ? '9:16' : '16:9'
+                }));
+                
+                const newPost = {
+                    id: Date.now(),
+                    userId: AppState.currentUser ? AppState.currentUser.id : 1,
+                    userName: AppState.currentUser ? AppState.currentUser.name : 'Utilisateur',
+                    userAvatar: AppState.currentUser ? AppState.currentUser.avatar : '👤',
+                    content: content,
+                    media: postMedia,
+                    likes: 0,
+                    comments: 0,
+                    shares: 0,
+                    isLiked: false,
+                    timestamp: "À l'instant",
+                    location: "Mahajanga",
+                    tags: extractTags(content),
+                    status: 'active'
+                };
+                
+                AppState.posts.unshift(newPost);
+                AppState.adminData.posts.unshift(newPost);
+                renderPosts();
+                renderRecentPosts();
+                
+                textInput.value = '';
+                AppState.uploadedMedia = [];
+                document.getElementById('media-preview').innerHTML = '';
+                
+                if (publishBtn) {
+                    publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publier';
+                    publishBtn.disabled = false;
+                }
+                
+                AppState.isPosting = false;
+                
+                showNotification('Publication créée avec succès!', 'success');
+                
+                if (AppState.currentUser) {
+                    updatePostCount();
+                    updateAdminStats();
+                }
+            }, 1000);
         }
 
         function extractTags(content) {
@@ -5783,6 +6100,8 @@
         function handleMediaUpload(event) {
             const files = event.target.files;
             if (files.length === 0) return;
+            
+            AppState.uploadedMedia = [];
             
             for (let i = 0; i < Math.min(files.length, 5); i++) {
                 const file = files[i];
@@ -5848,6 +6167,7 @@
             post.likes += post.isLiked ? 1 : -1;
             
             renderPosts();
+            renderRecentPosts();
         }
 
         function addComment(postId, inputElement) {
@@ -5888,97 +6208,12 @@
             }
         }
 
-        // ===== MESSAGERIE FUNCTIONS =====
-        function initializeConversations() {
-            if (AppState.currentUser) {
-                // Créer des conversations de démonstration
-                AppState.conversations = [
-                    {
-                        id: 1,
-                        userId: 2, // Marie Ravao
-                        userName: "Marie Ravao",
-                        userAvatar: "👩",
-                        lastMessage: "Bonjour ! Je suis en route pour vous prendre.",
-                        lastMessageTime: "10:30",
-                        unread: 2,
-                        messages: [
-                            {
-                                id: 1,
-                                senderId: 2,
-                                text: "Bonjour ! Je suis disponible pour une course.",
-                                time: "10:15",
-                                read: true
-                            },
-                            {
-                                id: 2,
-                                senderId: AppState.currentUser.id,
-                                text: "Parfait, j'ai besoin d'aller à l'aéroport.",
-                                time: "10:20",
-                                read: true
-                            },
-                            {
-                                id: 3,
-                                senderId: 2,
-                                text: "D'accord, j'arrive dans 5 minutes.",
-                                time: "10:25",
-                                read: true
-                            },
-                            {
-                                id: 4,
-                                senderId: 2,
-                                text: "Bonjour ! Je suis en route pour vous prendre.",
-                                time: "10:30",
-                                read: false
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        userId: 4, // Admin VTC
-                        userName: "Admin VTC",
-                        userAvatar: "👑",
-                        lastMessage: "Votre compte a été vérifié avec succès.",
-                        lastMessageTime: "Hier",
-                        unread: 0,
-                        messages: [
-                            {
-                                id: 1,
-                                senderId: 4,
-                                text: "Bienvenue sur VTC Mahajanga !",
-                                time: "2024-12-19 09:00",
-                                read: true
-                            },
-                            {
-                                id: 2,
-                                senderId: AppState.currentUser.id,
-                                text: "Merci ! Comment fonctionne la boutique ?",
-                                time: "2024-12-19 09:15",
-                                read: true
-                            },
-                            {
-                                id: 3,
-                                senderId: 4,
-                                text: "Vous pouvez commander de la nourriture et des accessoires. Livraison rapide !",
-                                time: "2024-12-19 09:30",
-                                read: true
-                            },
-                            {
-                                id: 4,
-                                senderId: 4,
-                                text: "Votre compte a été vérifié avec succès.",
-                                time: "2024-12-19 14:00",
-                                read: true
-                            }
-                        ]
-                    }
-                ];
-                saveToLocalStorage();
-            }
-        }
-
+        // ===== MESSAGES FUNCTIONS =====
         function renderConversations() {
             const container = document.getElementById('conversations-list');
             if (!container) return;
+            
+            container.innerHTML = '';
             
             if (AppState.conversations.length === 0) {
                 container.innerHTML = `
@@ -5987,40 +6222,205 @@
                         <div>Aucune conversation</div>
                         <button class="btn btn-primary mt-3" onclick="startNewConversation()">
                             <i class="fas fa-plus"></i>
-                            Nouvelle conversation
+                            Commencer une conversation
                         </button>
                     </div>
                 `;
                 return;
             }
             
-            container.innerHTML = '';
+            AppState.conversations.sort((a, b) => {
+                const aTime = a.messages && a.messages.length > 0 ? 
+                    new Date(a.messages[a.messages.length - 1].timestamp) : new Date(a.createdAt);
+                const bTime = b.messages && b.messages.length > 0 ? 
+                    new Date(b.messages[b.messages.length - 1].timestamp) : new Date(b.createdAt);
+                return bTime - aTime;
+            });
+            
             AppState.conversations.forEach(conversation => {
+                const otherUser = AppState.users.find(u => u.id === conversation.userId);
+                if (!otherUser) return;
+                
+                const lastMessage = conversation.messages && conversation.messages.length > 0 ? 
+                    conversation.messages[conversation.messages.length - 1] : null;
+                
+                const unreadCount = conversation.messages ? 
+                    conversation.messages.filter(m => !m.read && m.senderId === conversation.userId).length : 0;
+                
                 const conversationElement = document.createElement('div');
-                conversationElement.className = `user-chat-card ${conversation.unread > 0 ? 'unread' : ''}`;
+                conversationElement.className = 'conversation-item';
                 conversationElement.onclick = () => openConversation(conversation.id);
                 
                 conversationElement.innerHTML = `
-                    <div class="user-avatar" style="width: 50px; height: 50px; font-size: 20px;">
-                        ${conversation.userAvatar}
+                    <div class="conversation-avatar">
+                        ${otherUser.avatar}
                     </div>
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="font-weight: 600; font-size: 14px;">${conversation.userName}</div>
-                            <div style="font-size: 10px; color: var(--text-secondary);">${conversation.lastMessageTime}</div>
-                        </div>
-                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            ${conversation.lastMessage}
+                    <div class="conversation-info">
+                        <div class="conversation-user">${otherUser.name}</div>
+                        <div class="conversation-preview">
+                            ${lastMessage ? (lastMessage.senderId === conversation.userId ? '' : 'Vous: ') + lastMessage.text : 'Aucun message'}
                         </div>
                     </div>
-                    ${conversation.unread > 0 ? `
-                        <div class="chat-badge">${conversation.unread}</div>
-                    ` : ''}
+                    <div class="conversation-meta">
+                        <div class="conversation-time">
+                            ${lastMessage ? formatMessageTime(lastMessage.timestamp) : formatMessageTime(conversation.createdAt)}
+                        </div>
+                        ${unreadCount > 0 ? `
+                            <div class="conversation-unread">
+                                ${unreadCount}
+                            </div>
+                        ` : ''}
+                    </div>
                 `;
+                
                 container.appendChild(conversationElement);
             });
             
-            updateMessagesBadge();
+            updateMessagesCount();
+        }
+
+        function renderSuggestedUsers() {
+            const container = document.getElementById('suggested-users');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const existingUserIds = AppState.conversations.map(c => c.userId);
+            const suggestedUsers = AppState.users.filter(user => 
+                user.id !== (AppState.currentUser ? AppState.currentUser.id : 0) &&
+                !existingUserIds.includes(user.id) &&
+                user.isRealUser === true
+            ).slice(0, 3);
+            
+            if (suggestedUsers.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted p-3">
+                        <div>Aucune suggestion disponible</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            suggestedUsers.forEach(user => {
+                const userElement = document.createElement('div');
+                userElement.className = 'conversation-item';
+                userElement.onclick = () => startConversationWithUser(user.id);
+                
+                userElement.innerHTML = `
+                    <div class="conversation-avatar">
+                        ${user.avatar}
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-user">${user.name}</div>
+                        <div class="conversation-preview">
+                            ${user.bio || 'Membre VTC Mahajanga'}
+                        </div>
+                    </div>
+                    <div class="conversation-meta">
+                        <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); startConversationWithUser(${user.id})">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(userElement);
+            });
+        }
+
+        function startNewConversation() {
+            document.getElementById('new-conversation-modal').classList.remove('hidden');
+        }
+
+        function closeNewConversationModal() {
+            document.getElementById('new-conversation-modal').classList.add('hidden');
+            document.getElementById('search-user-input').value = '';
+            document.getElementById('search-users-results').innerHTML = '';
+        }
+
+        function searchUsersForMessage(query) {
+            const resultsContainer = document.getElementById('search-users-results');
+            if (!resultsContainer) return;
+            
+            if (!query.trim()) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center text-muted p-3">
+                        <div>Recherchez un utilisateur par nom, email ou @username</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const filteredUsers = AppState.users.filter(user => 
+                user.id !== (AppState.currentUser ? AppState.currentUser.id : 0) &&
+                user.isRealUser === true &&
+                (user.name.toLowerCase().includes(query.toLowerCase()) ||
+                 user.email.toLowerCase().includes(query.toLowerCase()) ||
+                 user.username.toLowerCase().includes(query.toLowerCase()))
+            );
+            
+            resultsContainer.innerHTML = '';
+            
+            if (filteredUsers.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center text-muted p-3">
+                        <div>Aucun utilisateur trouvé</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredUsers.forEach(user => {
+                const userElement = document.createElement('div');
+                userElement.className = 'conversation-item';
+                userElement.onclick = () => {
+                    startConversationWithUser(user.id);
+                    closeNewConversationModal();
+                };
+                
+                userElement.innerHTML = `
+                    <div class="conversation-avatar">
+                        ${user.avatar}
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-user">${user.name}</div>
+                        <div class="conversation-preview">
+                            @${user.username} • ${user.email}
+                        </div>
+                    </div>
+                    <div class="conversation-meta">
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                    </div>
+                `;
+                
+                resultsContainer.appendChild(userElement);
+            });
+        }
+
+        function startConversationWithUser(userId) {
+            const user = AppState.users.find(u => u.id === userId);
+            if (!user) return;
+            
+            let conversation = AppState.conversations.find(c => c.userId === userId);
+            
+            if (!conversation) {
+                conversation = {
+                    id: Date.now(),
+                    userId: user.id,
+                    userName: user.name,
+                    userAvatar: user.avatar,
+                    messages: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                AppState.conversations.push(conversation);
+                saveToLocalStorage();
+            }
+            
+            AppState.currentConversation = conversation;
+            openMessagesModal();
         }
 
         function openConversation(conversationId) {
@@ -6028,119 +6428,31 @@
             if (!conversation) return;
             
             AppState.currentConversation = conversation;
-            document.getElementById('chat-title').textContent = conversation.userName;
-            
-            // Marquer les messages comme lus
-            conversation.unread = 0;
-            saveToLocalStorage();
-            updateMessagesBadge();
-            
-            // Afficher les messages
-            const messagesList = document.getElementById('messages-list');
-            messagesList.innerHTML = '';
-            
-            conversation.messages.forEach(message => {
-                const messageElement = document.createElement('div');
-                const isCurrentUser = message.senderId === AppState.currentUser?.id;
-                messageElement.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
-                
-                if (!isCurrentUser) {
-                    const user = AppState.users.find(u => u.id === message.senderId);
-                    messageElement.innerHTML = `
-                        <div class="message-sender">${user ? user.name : 'Utilisateur'}</div>
-                        <div class="message-text">${message.text}</div>
-                        <div class="message-time">${message.time}</div>
-                    `;
-                } else {
-                    messageElement.innerHTML = `
-                        <div class="message-text">${message.text}</div>
-                        <div class="message-time">${message.time}</div>
-                    `;
-                }
-                
-                messagesList.appendChild(messageElement);
-            });
-            
-            messagesList.scrollTop = messagesList.scrollHeight;
-            document.getElementById('messages-modal').classList.remove('hidden');
+            openMessagesModal();
         }
 
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const text = input.value.trim();
+        function openMessagesModal() {
+            if (!AppState.currentConversation) return;
             
-            if (!text || !AppState.currentConversation) return;
+            const otherUser = AppState.users.find(u => u.id === AppState.currentConversation.userId);
+            if (!otherUser) return;
             
-            const newMessage = {
-                id: Date.now(),
-                senderId: AppState.currentUser.id,
-                text: text,
-                time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-                read: true
-            };
+            document.getElementById('messages-modal-title').textContent = otherUser.name;
+            renderMessages();
             
-            AppState.currentConversation.messages.push(newMessage);
-            AppState.currentConversation.lastMessage = text;
-            AppState.currentConversation.lastMessageTime = newMessage.time;
+            if (AppState.currentConversation.messages) {
+                AppState.currentConversation.messages.forEach(message => {
+                    if (message.senderId === AppState.currentConversation.userId) {
+                        message.read = true;
+                    }
+                });
+            }
             
-            input.value = '';
             saveToLocalStorage();
-            
-            // Mettre à jour l'affichage
-            const messagesList = document.getElementById('messages-list');
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message sent';
-            messageElement.innerHTML = `
-                <div class="message-text">${text}</div>
-                <div class="message-time">${newMessage.time}</div>
-            `;
-            messagesList.appendChild(messageElement);
-            messagesList.scrollTop = messagesList.scrollHeight;
-            
-            // Mettre à jour la liste des conversations
+            updateMessagesCount();
             renderConversations();
             
-            // Simuler une réponse automatique après 1 seconde
-            setTimeout(() => {
-                const replyMessage = {
-                    id: Date.now() + 1,
-                    senderId: AppState.currentConversation.userId,
-                    text: "Message reçu. Je vous répondrai dès que possible !",
-                    time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-                    read: false
-                };
-                
-                AppState.currentConversation.messages.push(replyMessage);
-                AppState.currentConversation.lastMessage = replyMessage.text;
-                AppState.currentConversation.lastMessageTime = replyMessage.time;
-                AppState.currentConversation.unread += 1;
-                
-                saveToLocalStorage();
-                updateMessagesBadge();
-                
-                if (document.getElementById('messages-modal').classList.contains('hidden')) {
-                    // Si la conversation n'est pas ouverte, juste mettre à jour le badge
-                    return;
-                }
-                
-                // Ajouter la réponse à l'affichage
-                const replyElement = document.createElement('div');
-                replyElement.className = 'message received';
-                
-                const user = AppState.users.find(u => u.id === AppState.currentConversation.userId);
-                replyElement.innerHTML = `
-                    <div class="message-sender">${user ? user.name : 'Utilisateur'}</div>
-                    <div class="message-text">${replyMessage.text}</div>
-                    <div class="message-time">${replyMessage.time}</div>
-                `;
-                
-                messagesList.appendChild(replyElement);
-                messagesList.scrollTop = messagesList.scrollHeight;
-                
-                // Mettre à jour la liste des conversations
-                renderConversations();
-                
-            }, 1000);
+            document.getElementById('messages-modal').classList.remove('hidden');
         }
 
         function closeMessagesModal() {
@@ -6148,153 +6460,202 @@
             AppState.currentConversation = null;
         }
 
-        function startNewConversation() {
-            document.getElementById('new-conversation-modal').classList.remove('hidden');
-            document.getElementById('search-user-input').value = '';
-            document.getElementById('search-results').innerHTML = `
-                <div class="text-center text-muted p-4">
-                    <div>Recherchez un utilisateur pour démarrer une conversation</div>
-                </div>
-            `;
-        }
-
-        function closeNewConversationModal() {
-            document.getElementById('new-conversation-modal').classList.add('hidden');
-        }
-
-        function searchUsersForChat(query) {
-            const resultsContainer = document.getElementById('search-results');
+        function renderMessages() {
+            if (!AppState.currentConversation) return;
             
-            if (!query.trim()) {
-                resultsContainer.innerHTML = `
+            const container = document.getElementById('messages-list');
+            const messageInput = document.getElementById('message-input');
+            
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!AppState.currentConversation.messages || AppState.currentConversation.messages.length === 0) {
+                container.innerHTML = `
                     <div class="text-center text-muted p-4">
-                        <div>Recherchez un utilisateur pour démarrer une conversation</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            const filteredUsers = AppState.users.filter(user => 
-                user.id !== AppState.currentUser?.id && // Exclure l'utilisateur actuel
-                (user.name.toLowerCase().includes(query.toLowerCase()) ||
-                 user.email.toLowerCase().includes(query.toLowerCase()) ||
-                 user.phone.includes(query))
-            );
-            
-            if (filteredUsers.length === 0) {
-                resultsContainer.innerHTML = `
-                    <div class="text-center text-muted p-4">
-                        <div>Aucun utilisateur trouvé</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            resultsContainer.innerHTML = '';
-            filteredUsers.forEach(user => {
-                const userElement = document.createElement('div');
-                userElement.className = 'user-chat-card';
-                userElement.onclick = () => createNewConversation(user);
-                
-                userElement.innerHTML = `
-                    <div class="user-avatar" style="width: 50px; height: 50px; font-size: 20px;">
-                        ${user.avatar}
-                    </div>
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="font-weight: 600; font-size: 14px;">${user.name}</div>
-                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
-                            ${user.isDriver ? '🚗 Chauffeur' : '👤 Passager'}
+                        <i class="fas fa-comment-slash" style="font-size: 36px; margin-bottom: var(--space-sm);"></i>
+                        <div>Aucun message</div>
+                        <div class="text-muted mt-2" style="font-size: 12px;">
+                            Commencez la conversation avec ${AppState.currentConversation.userName}
                         </div>
                     </div>
                 `;
-                resultsContainer.appendChild(userElement);
-            });
-        }
-
-        function createNewConversation(user) {
-            // Vérifier si une conversation existe déjà
-            const existingConversation = AppState.conversations.find(c => c.userId === user.id);
-            
-            if (existingConversation) {
-                closeNewConversationModal();
-                openConversation(existingConversation.id);
                 return;
             }
             
-            // Créer une nouvelle conversation
-            const newConversation = {
+            AppState.currentConversation.messages.forEach(message => {
+                const isSent = message.senderId !== AppState.currentConversation.userId;
+                const messageElement = document.createElement('div');
+                messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
+                
+                if (!isSent) {
+                    messageElement.innerHTML = `
+                        <div class="message-sender">${AppState.currentConversation.userName}</div>
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-time">
+                            ${formatMessageTime(message.timestamp)}
+                            ${message.read ? ' ✓✓' : ' ✓'}
+                        </div>
+                    `;
+                } else {
+                    messageElement.innerHTML = `
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-time">
+                            ${formatMessageTime(message.timestamp)}
+                        </div>
+                    `;
+                }
+                
+                container.appendChild(messageElement);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+            
+            if (messageInput) {
+                messageInput.focus();
+            }
+        }
+
+        function sendMessage() {
+            if (!AppState.currentConversation) {
+                showNotification('Aucune conversation sélectionnée', 'error');
+                return;
+            }
+            
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const newMessage = {
                 id: Date.now(),
-                userId: user.id,
-                userName: user.name,
-                userAvatar: user.avatar,
-                lastMessage: "Conversation démarrée",
-                lastMessageTime: "À l'instant",
-                unread: 0,
-                messages: [
-                    {
-                        id: 1,
-                        senderId: AppState.currentUser.id,
-                        text: "Bonjour !",
-                        time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-                        read: true
-                    }
-                ]
+                senderId: AppState.currentUser ? AppState.currentUser.id : 0,
+                text: text,
+                timestamp: new Date().toISOString(),
+                read: false
             };
             
-            AppState.conversations.unshift(newConversation);
+            if (!AppState.currentConversation.messages) {
+                AppState.currentConversation.messages = [];
+            }
+            
+            AppState.currentConversation.messages.push(newMessage);
+            AppState.currentConversation.updatedAt = new Date().toISOString();
+            
+            const otherUser = AppState.users.find(u => u.id === AppState.currentConversation.userId);
+            if (otherUser) {
+                AppState.adminData.messages.push({
+                    id: newMessage.id,
+                    from: AppState.currentUser ? AppState.currentUser.name : 'Utilisateur',
+                    to: otherUser.name,
+                    message: text,
+                    time: new Date().toLocaleTimeString('fr-FR'),
+                    read: false
+                });
+            }
+            
             saveToLocalStorage();
+            input.value = '';
             
-            closeNewConversationModal();
+            renderMessages();
             renderConversations();
-            openConversation(newConversation.id);
+            updateMessagesCount();
+            updateAdminStats();
             
-            showNotification(`Conversation démarrée avec ${user.name}`, 'success');
-        }
-
-        function openChatWithDriver() {
-            if (!AppState.currentDriver) {
-                showNotification('Aucun chauffeur sélectionné', 'error');
-                return;
-            }
-            
-            // Trouver l'utilisateur correspondant au chauffeur
-            const driverUser = AppState.users.find(u => 
-                u.name === AppState.currentDriver.name || 
-                u.phone === AppState.currentDriver.phone
-            );
-            
-            if (!driverUser) {
-                showNotification('Impossible de contacter le chauffeur', 'error');
-                return;
-            }
-            
-            createNewConversation(driverUser);
-        }
-
-        function startChatWithUser() {
-            const modal = document.getElementById('user-profile-modal');
-            if (!modal.classList.contains('hidden')) {
-                const userId = parseInt(modal.dataset.userId);
-                const user = AppState.users.find(u => u.id === userId);
-                if (user) {
-                    closeUserProfileModal();
-                    createNewConversation(user);
+            setTimeout(() => {
+                if (AppState.currentConversation) {
+                    const replyMessage = {
+                        id: Date.now() + 1,
+                        senderId: AppState.currentConversation.userId,
+                        text: getRandomReply(),
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    };
+                    
+                    AppState.currentConversation.messages.push(replyMessage);
+                    AppState.currentConversation.updatedAt = new Date().toISOString();
+                    
+                    saveToLocalStorage();
+                    renderMessages();
+                    renderConversations();
+                    updateMessagesCount();
+                    
+                    showNotification('Nouveau message reçu', 'info');
                 }
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function getRandomReply() {
+            const replies = [
+                "Salut ! Comment vas-tu ?",
+                "Merci pour ton message !",
+                "Je suis disponible pour discuter",
+                "Intéressant ! Dis-moi en plus",
+                "D'accord, je comprends",
+                "On se voit bientôt peut-être ?",
+                "Bon à savoir, merci !",
+                "Je suis d'accord avec toi",
+                "Super conversation !",
+                "À bientôt sur VTC Mahajanga !"
+            ];
+            return replies[Math.floor(Math.random() * replies.length)];
+        }
+
+        function formatMessageTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) {
+                return 'À l\'instant';
+            } else if (diff < 3600000) {
+                const minutes = Math.floor(diff / 60000);
+                return `Il y a ${minutes} min`;
+            } else if (diff < 86400000) {
+                const hours = Math.floor(diff / 3600000);
+                return `Il y a ${hours} h`;
+            } else {
+                return date.toLocaleDateString('fr-FR', { 
+                    day: 'numeric', 
+                    month: 'short' 
+                });
             }
         }
 
-        function updateMessagesBadge() {
-            const totalUnread = AppState.conversations.reduce((sum, conv) => sum + conv.unread, 0);
-            const badge = document.getElementById('messages-badge');
+        function updateMessagesCount() {
+            let totalUnread = 0;
+            
+            AppState.conversations.forEach(conversation => {
+                if (conversation.messages) {
+                    const unread = conversation.messages.filter(m => 
+                        !m.read && m.senderId === conversation.userId
+                    ).length;
+                    totalUnread += unread;
+                }
+            });
+            
+            AppState.unreadMessages = totalUnread;
+            
+            const badge = document.getElementById('messages-nav-badge');
+            const countElement = document.getElementById('messages-count');
             
             if (totalUnread > 0) {
                 badge.textContent = totalUnread;
                 badge.classList.remove('hidden');
+                countElement.textContent = totalUnread;
             } else {
                 badge.classList.add('hidden');
+                countElement.textContent = AppState.conversations.length;
+            }
+        }
+
+        function sendMessageToUser(userId) {
+            if (!AppState.currentUser) {
+                showNotification('Veuillez vous connecter pour envoyer un message', 'error');
+                return;
             }
             
-            AppState.unreadMessages = totalUnread;
+            startConversationWithUser(userId);
         }
 
         // ===== MAP FUNCTIONS =====
@@ -6421,6 +6782,8 @@
                             .bindPopup('Votre position')
                             .openPopup();
                         
+                        updateUserRadiusCircle(userPos);
+                        
                         AppState.map.setView(userPos, 15);
                         
                         showNotification('Position localisée avec succès', 'success');
@@ -6446,6 +6809,84 @@
             }
         }
 
+        function updateUserRadiusCircle(center) {
+            if (AppState.userRadiusCircle) {
+                AppState.userRadiusCircle.remove();
+            }
+            
+            AppState.userRadiusCircle = L.circle(center, {
+                radius: CONFIG.USER_RADIUS_KM * 1000,
+                color: '#007AFF',
+                fillColor: '#007AFF',
+                fillOpacity: 0.1,
+                weight: 2,
+                opacity: 0.5
+            }).addTo(AppState.map);
+            
+            if (!AppState.radiusVisible) {
+                AppState.userRadiusCircle.remove();
+            }
+            
+            updateNearbyDrivers();
+        }
+
+        function toggleRadius() {
+            AppState.radiusVisible = !AppState.radiusVisible;
+            
+            if (AppState.userRadiusCircle) {
+                if (AppState.radiusVisible) {
+                    AppState.userRadiusCircle.addTo(AppState.map);
+                } else {
+                    AppState.userRadiusCircle.remove();
+                }
+            }
+            
+            const btn = document.getElementById('toggle-radius-btn');
+            if (AppState.radiusVisible) {
+                btn.innerHTML = '<i class="fas fa-circle"></i>';
+                btn.title = 'Masquer le cercle de 3km';
+                showNotification('Cercle de 3km affiché', 'info');
+            } else {
+                btn.innerHTML = '<i class="far fa-circle"></i>';
+                btn.title = 'Afficher le cercle de 3km';
+                showNotification('Cercle de 3km masqué', 'info');
+            }
+        }
+
+        function updateNearbyDrivers() {
+            if (!AppState.currentLocation || !AppState.userRadiusCircle) return;
+            
+            const center = AppState.currentLocation;
+            const radius = CONFIG.USER_RADIUS_KM;
+            
+            const nearbyDrivers = AppState.drivers.filter(driver => {
+                if (driver.status !== 'available') return false;
+                
+                const distance = calculateDistance(
+                    center[0], center[1],
+                    driver.lat, driver.lng
+                );
+                
+                return distance <= radius;
+            });
+            
+            document.getElementById('drivers-count').textContent = `${nearbyDrivers.length} dans la zone`;
+            
+            renderDriversList();
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
         function getCurrentLocation() {
             showNotification('Localisation en cours...', 'info');
             locateUser();
@@ -6460,12 +6901,31 @@
 
         function refreshMap() {
             addDriversToMap();
+            if (AppState.currentLocation) {
+                updateUserRadiusCircle(AppState.currentLocation);
+            }
             showNotification('Carte actualisée', 'success');
         }
 
         function updateDriversCount() {
-            const availableDrivers = AppState.drivers.filter(d => d.status === 'available').length;
-            document.getElementById('drivers-count').textContent = `${availableDrivers} disponibles`;
+            if (!AppState.currentLocation) {
+                document.getElementById('drivers-count').textContent = 'Localisation requise';
+                return;
+            }
+            
+            const nearbyDrivers = AppState.drivers.filter(driver => {
+                if (driver.status !== 'available') return false;
+                if (!AppState.currentLocation) return true;
+                
+                const distance = calculateDistance(
+                    AppState.currentLocation[0], AppState.currentLocation[1],
+                    driver.lat, driver.lng
+                );
+                
+                return distance <= CONFIG.USER_RADIUS_KM;
+            });
+            
+            document.getElementById('drivers-count').textContent = `${nearbyDrivers.length} dans la zone`;
         }
 
         function selectDriverFromMap(driverId) {
@@ -6494,7 +6954,47 @@
             
             container.innerHTML = '';
             
-            AppState.drivers.forEach(driver => {
+            if (!AppState.currentLocation) {
+                container.innerHTML = `
+                    <div class="text-center text-muted p-4">
+                        <i class="fas fa-map-marker-alt" style="font-size: 36px; margin-bottom: var(--space-sm);"></i>
+                        <div>Activez la localisation pour voir les chauffeurs près de vous</div>
+                        <button class="btn btn-primary mt-3" onclick="locateUser()">
+                            <i class="fas fa-location-crosshairs"></i>
+                            Activer la localisation
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const nearbyDrivers = AppState.drivers.filter(driver => {
+                if (driver.status !== 'available') return false;
+                
+                const distance = calculateDistance(
+                    AppState.currentLocation[0], AppState.currentLocation[1],
+                    driver.lat, driver.lng
+                );
+                
+                return distance <= CONFIG.USER_RADIUS_KM;
+            });
+            
+            if (nearbyDrivers.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted p-4">
+                        <i class="fas fa-car" style="font-size: 36px; margin-bottom: var(--space-sm);"></i>
+                        <div>Aucun chauffeur disponible dans votre zone (3km)</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            nearbyDrivers.forEach(driver => {
+                const distance = calculateDistance(
+                    AppState.currentLocation[0], AppState.currentLocation[1],
+                    driver.lat, driver.lng
+                );
+                
                 const driverElement = document.createElement('div');
                 driverElement.className = 'driver-card';
                 driverElement.onclick = () => selectDriverFromMap(driver.id);
@@ -6508,7 +7008,7 @@
                         <div class="driver-vehicle">${driver.vehicle} • ${driver.plate}</div>
                         <div class="driver-rating">
                             ⭐ ${driver.rating}
-                            <span class="text-muted">• ${driver.distance.toFixed(1)} km</span>
+                            <span class="text-muted">• ${distance.toFixed(1)} km</span>
                         </div>
                     </div>
                     <div style="color: ${driver.status === 'available' ? 'var(--success)' : 'var(--warning)'}; font-size: 12px; font-weight: 600;">
@@ -6542,7 +7042,6 @@
                 return;
             }
             
-            // Vérifier si c'est l'admin
             if (role === 'admin' && email === CONFIG.ADMIN_CREDENTIALS.email && password === CONFIG.ADMIN_CREDENTIALS.password) {
                 const adminUser = SAMPLE_USERS.find(u => u.isAdmin === true);
                 if (adminUser) {
@@ -6581,6 +7080,7 @@
                 isFollowing: false,
                 isDriver: role === 'driver',
                 isAdmin: false,
+                isRealUser: true,
                 joinDate: new Date().toLocaleDateString('fr-FR'),
                 wallet: AppState.wallet,
                 licenseNumber: license || null,
@@ -6646,13 +7146,13 @@
             updatePostCount();
             updateFollowersCount();
             updateOrdersCount();
+            updateMessagesCount();
             updateWalletUI();
             renderOrderHistory();
             updateRecentOrders();
             
             updateAvatarDisplay(AppState.currentUser.avatar);
             
-            // Afficher/masquer le bouton admin
             const adminBtn = document.getElementById('admin-btn');
             if (AppState.isAdmin) {
                 adminBtn.classList.remove('hidden');
@@ -6663,12 +7163,6 @@
             if (AppState.currentUser.isDriver) {
                 AppState.driverMode = true;
                 showNotification('Mode chauffeur activé', 'success');
-            }
-            
-            // Initialiser les conversations après connexion
-            if (AppState.conversations.length === 0) {
-                initializeConversations();
-                renderConversations();
             }
         }
 
@@ -6832,6 +7326,7 @@
                 isFollowing: false,
                 isDriver: true,
                 isAdmin: false,
+                isRealUser: true,
                 joinDate: new Date().toLocaleDateString('fr-FR'),
                 wallet: 0,
                 licenseNumber: license,
@@ -7235,7 +7730,6 @@
 
         // ===== UTILITY FUNCTIONS =====
         function showPage(pageName) {
-            // Pause toutes les vidéos avant de changer de page
             pauseAllVideos();
             cleanupVideoPlayers();
             
@@ -7260,6 +7754,9 @@
             if (pageName === 'map' && AppState.map) {
                 setTimeout(() => {
                     AppState.map.invalidateSize();
+                    if (AppState.currentLocation) {
+                        updateUserRadiusCircle(AppState.currentLocation);
+                    }
                 }, 100);
             }
             
@@ -7273,13 +7770,14 @@
             
             if (pageName === 'home') {
                 updateRecentOrders();
+                renderRecentPosts();
             }
             
             if (pageName === 'messages') {
                 renderConversations();
+                renderSuggestedUsers();
             }
             
-            // Réinitialiser les vidéos après le changement de page
             setTimeout(initVideoPlayers, 300);
         }
 
@@ -7384,7 +7882,6 @@
         }
 
         function showOrderHistory() {
-            // L'historique est déjà affiché
         }
 
         function quickRide(type) {
@@ -7404,6 +7901,7 @@
                     
                     if (document.getElementById('map-page').classList.contains('active')) {
                         addDriversToMap();
+                        updateNearbyDrivers();
                     }
                 }
             }, 30000);
@@ -7436,7 +7934,6 @@
         }
 
         function showAdminTab(tabName) {
-            // Masquer tous les onglets
             document.querySelectorAll('.admin-section').forEach(section => {
                 section.classList.remove('active');
             });
@@ -7445,11 +7942,9 @@
                 tab.classList.remove('active');
             });
             
-            // Afficher l'onglet sélectionné
             document.getElementById(`admin-${tabName}`).classList.add('active');
             document.querySelector(`.admin-tab[onclick*="${tabName}"]`).classList.add('active');
             
-            // Charger les données de l'onglet
             switch(tabName) {
                 case 'dashboard':
                     loadAdminDashboard();
@@ -7460,14 +7955,14 @@
                 case 'drivers':
                     loadAdminDrivers();
                     break;
-                case 'products':
-                    loadAdminProducts();
-                    break;
                 case 'orders':
                     loadAdminOrders();
                     break;
                 case 'posts':
                     loadAdminPosts();
+                    break;
+                case 'messages':
+                    loadAdminMessages();
                     break;
             }
         }
@@ -7483,9 +7978,9 @@
             AppState.adminData.stats = {
                 totalUsers: AppState.adminData.users.length,
                 totalDrivers: AppState.adminData.drivers.length,
-                totalProducts: AppState.adminData.products.length,
                 totalOrders: AppState.adminData.orders.length,
                 totalPosts: AppState.adminData.posts.length,
+                totalMessages: AppState.adminData.messages.length,
                 todayOrders: AppState.adminData.orders.filter(o => o.date === today).length,
                 todayRevenue: AppState.adminData.orders
                     .filter(o => o.date === today)
@@ -7493,18 +7988,17 @@
                 activeUsers: AppState.adminData.users.filter(u => u.status === 'active').length
             };
             
-            // Mettre à jour l'affichage
             document.getElementById('admin-total-users').textContent = AppState.adminData.stats.totalUsers;
             document.getElementById('admin-total-drivers').textContent = AppState.adminData.stats.totalDrivers;
-            document.getElementById('admin-total-products').textContent = AppState.adminData.stats.totalProducts;
             document.getElementById('admin-total-orders').textContent = AppState.adminData.stats.totalOrders;
+            document.getElementById('admin-total-posts').textContent = AppState.adminData.stats.totalPosts;
+            document.getElementById('admin-total-messages').textContent = AppState.adminData.stats.totalMessages;
             document.getElementById('admin-today-orders').textContent = AppState.adminData.stats.todayOrders;
             document.getElementById('admin-today-revenue').textContent = formatPrice(AppState.adminData.stats.todayRevenue);
             document.getElementById('admin-active-users').textContent = AppState.adminData.stats.activeUsers;
         }
 
         function loadAdminDashboard() {
-            // Les statistiques sont déjà mises à jour par updateAdminStats()
         }
 
         function loadAdminUsers() {
@@ -7582,43 +8076,6 @@
             });
         }
 
-        function loadAdminProducts() {
-            const container = document.getElementById('admin-products-grid');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            AppState.adminData.products.forEach(product => {
-                const isPartner = product.category === 'partners';
-                const productElement = document.createElement('div');
-                productElement.className = 'admin-product-card';
-                
-                productElement.innerHTML = `
-                    <div class="admin-product-image">
-                        ${product.image}
-                    </div>
-                    <div style="font-weight: 600; font-size: 12px; margin-bottom: 4px;">${product.name}</div>
-                    <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 4px;">
-                        ${product.category === 'food' ? '🍔 Nourriture' : 
-                         product.category === 'accessories' ? '🔧 Accessoires' : 
-                         '🤝 Partenaires'}
-                    </div>
-                    <div style="font-weight: 700; color: ${isPartner ? 'var(--partner-color)' : 'var(--shop-primary)'}; font-size: 14px;">
-                        ${formatPrice(product.price)}
-                    </div>
-                    <div class="admin-product-actions">
-                        <button class="admin-action-btn edit" onclick="editProduct(${product.id})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="admin-action-btn delete" onclick="deleteProduct(${product.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(productElement);
-            });
-        }
-
         function loadAdminOrders() {
             const table = document.getElementById('admin-orders-table');
             table.innerHTML = '';
@@ -7688,262 +8145,30 @@
             });
         }
 
-        function showAddProductModal() {
-            document.getElementById('edit-product-title').textContent = 'Ajouter un produit';
-            document.getElementById('edit-product-form').innerHTML = createProductForm();
-            document.getElementById('edit-product-modal').classList.remove('hidden');
-        }
-
-        function editProduct(productId) {
-            const product = AppState.products.find(p => p.id === productId);
-            if (!product) return;
+        function loadAdminMessages() {
+            const table = document.getElementById('admin-messages-table');
+            table.innerHTML = '';
             
-            document.getElementById('edit-product-title').textContent = 'Modifier le produit';
-            document.getElementById('edit-product-form').innerHTML = createProductForm(product);
-            document.getElementById('edit-product-modal').classList.remove('hidden');
-        }
-
-        function createProductForm(product = null) {
-            const isEdit = product !== null;
-            
-            return `
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-box"></i>
-                        Nom du produit
-                    </label>
-                    <input type="text" 
-                           id="product-name" 
-                           class="input-field"
-                           value="${product ? product.name : ''}"
-                           placeholder="Nom du produit">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-align-left"></i>
-                        Description
-                    </label>
-                    <textarea id="product-description" 
-                              class="input-field"
-                              rows="3"
-                              placeholder="Description détaillée du produit">${product ? product.description : ''}</textarea>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-coins"></i>
-                        Prix (Ar)
-                    </label>
-                    <input type="number" 
-                           id="product-price" 
-                           class="input-field"
-                           value="${product ? product.price : ''}"
-                           min="0"
-                           step="100"
-                           placeholder="Prix en Ariary">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-list"></i>
-                        Catégorie
-                    </label>
-                    <select id="product-category" class="input-field">
-                        <option value="food" ${product && product.category === 'food' ? 'selected' : ''}>🍔 Nourriture</option>
-                        <option value="accessories" ${product && product.category === 'accessories' ? 'selected' : ''}>🔧 Accessoires</option>
-                        <option value="partners" ${product && product.category === 'partners' ? 'selected' : ''}>🤝 Partenaires</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-cube"></i>
-                        Stock
-                    </label>
-                    <input type="number" 
-                           id="product-stock" 
-                           class="input-field"
-                           value="${product ? product.stock : '0'}"
-                           min="0"
-                           placeholder="Quantité en stock">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-clock"></i>
-                        Temps de préparation (min)
-                    </label>
-                    <input type="number" 
-                           id="product-preparation-time" 
-                           class="input-field"
-                           value="${product ? product.preparationTime : '0'}"
-                           min="0"
-                           placeholder="0 pour les produits immédiats">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-star"></i>
-                        Note (1-5)
-                    </label>
-                    <input type="number" 
-                           id="product-rating" 
-                           class="input-field"
-                           value="${product ? product.rating : '4.0'}"
-                           min="1"
-                           max="5"
-                           step="0.1"
-                           placeholder="Note du produit">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-image"></i>
-                        Icône/Image
-                    </label>
-                    <input type="text" 
-                           id="product-image" 
-                           class="input-field"
-                           value="${product ? product.image : '📦'}"
-                           placeholder="Emoji ou URL d'image">
-                </div>
-
-                <div id="partner-fields" style="${product && product.category === 'partners' ? '' : 'display: none;'}">
-                    <div class="input-group">
-                        <label class="input-label">
-                            <i class="fas fa-handshake"></i>
-                            Partenaire
-                        </label>
-                        <input type="text" 
-                               id="product-partner" 
-                               class="input-field"
-                               value="${product && product.partner ? product.partner : ''}"
-                               placeholder="Nom du partenaire">
-                    </div>
-
-                    <div class="input-group">
-                        <label class="input-label">
-                            <i class="fas fa-gift"></i>
-                            Avantages (un par ligne)
-                        </label>
-                        <textarea id="product-benefits" 
-                                  class="input-field"
-                                  rows="3"
-                                  placeholder="Avantage 1&#10;Avantage 2&#10;Avantage 3">${product && product.benefits ? product.benefits.join('&#10;') : ''}</textarea>
-                    </div>
-                </div>
-
-                <button class="btn ${isEdit ? 'btn-warning' : 'btn-success'} btn-block mt-3" onclick="${isEdit ? `updateProduct(${product.id})` : 'saveNewProduct()'}">
-                    <i class="fas fa-save"></i>
-                    ${isEdit ? 'Mettre à jour' : 'Ajouter le produit'}
-                </button>
-            `;
-        }
-
-        function saveNewProduct() {
-            const product = getProductFormData();
-            if (!product) return;
-            
-            product.id = Date.now();
-            product.featured = false;
-            
-            AppState.products.push(product);
-            AppState.adminData.products.push(product);
-            
-            saveToLocalStorage();
-            renderProducts();
-            loadAdminProducts();
-            closeEditProductModal();
-            
-            showNotification('Produit ajouté avec succès', 'success');
-            updateAdminStats();
-        }
-
-        function updateProduct(productId) {
-            const productIndex = AppState.products.findIndex(p => p.id === productId);
-            if (productIndex === -1) return;
-            
-            const updatedProduct = getProductFormData();
-            if (!updatedProduct) return;
-            
-            updatedProduct.id = productId;
-            updatedProduct.featured = AppState.products[productIndex].featured;
-            
-            AppState.products[productIndex] = updatedProduct;
-            
-            // Mettre à jour dans adminData aussi
-            const adminProductIndex = AppState.adminData.products.findIndex(p => p.id === productId);
-            if (adminProductIndex !== -1) {
-                AppState.adminData.products[adminProductIndex] = updatedProduct;
-            }
-            
-            saveToLocalStorage();
-            renderProducts();
-            loadAdminProducts();
-            closeEditProductModal();
-            
-            showNotification('Produit mis à jour avec succès', 'success');
-        }
-
-        function getProductFormData() {
-            const name = document.getElementById('product-name').value.trim();
-            const description = document.getElementById('product-description').value.trim();
-            const price = parseInt(document.getElementById('product-price').value);
-            const category = document.getElementById('product-category').value;
-            const stock = parseInt(document.getElementById('product-stock').value);
-            const preparationTime = parseInt(document.getElementById('product-preparation-time').value);
-            const rating = parseFloat(document.getElementById('product-rating').value);
-            const image = document.getElementById('product-image').value.trim();
-            
-            if (!name || !description || !price || !category || stock < 0) {
-                showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-                return null;
-            }
-            
-            const product = {
-                name,
-                description,
-                price,
-                category,
-                stock,
-                preparationTime,
-                rating,
-                image
-            };
-            
-            if (category === 'partners') {
-                const partner = document.getElementById('product-partner').value.trim();
-                const benefitsText = document.getElementById('product-benefits').value.trim();
-                
-                if (partner) {
-                    product.partner = partner;
-                }
-                
-                if (benefitsText) {
-                    product.benefits = benefitsText.split('\n').filter(b => b.trim() !== '');
-                }
-            }
-            
-            return product;
-        }
-
-        function deleteProduct(productId) {
-            if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
-                AppState.products = AppState.products.filter(p => p.id !== productId);
-                AppState.adminData.products = AppState.adminData.products.filter(p => p.id !== productId);
-                
-                saveToLocalStorage();
-                renderProducts();
-                loadAdminProducts();
-                
-                showNotification('Produit supprimé', 'success');
-                updateAdminStats();
-            }
-        }
-
-        function closeEditProductModal() {
-            document.getElementById('edit-product-modal').classList.add('hidden');
+            AppState.adminData.messages.slice(0, 10).forEach(message => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${message.from}</td>
+                    <td>${message.to}</td>
+                    <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">
+                        ${message.message.length > 30 ? message.message.substring(0, 30) + '...' : message.message}
+                    </td>
+                    <td>${message.time}</td>
+                    <td>
+                        <button class="admin-action-btn edit" onclick="viewMessage(${message.id})">
+                            Voir
+                        </button>
+                        <button class="admin-action-btn delete" onclick="deleteMessage(${message.id})">
+                            Supprimer
+                        </button>
+                    </td>
+                `;
+                table.appendChild(row);
+            });
         }
 
         function searchUsers(query) {
@@ -8001,7 +8226,6 @@
             
             user.status = user.status === 'active' ? 'blocked' : 'active';
             
-            // Mettre à jour dans AppState.users aussi
             const mainUser = AppState.users.find(u => u.id === userId);
             if (mainUser) {
                 mainUser.status = user.status;
@@ -8018,7 +8242,6 @@
             
             driver.status = driver.status === 'available' ? 'busy' : 'available';
             
-            // Mettre à jour dans AppState.drivers aussi
             const mainDriver = AppState.drivers.find(d => d.id === driverId);
             if (mainDriver) {
                 mainDriver.status = driver.status;
@@ -8035,7 +8258,6 @@
             
             post.status = post.status === 'active' ? 'hidden' : 'active';
             
-            // Mettre à jour dans AppState.posts aussi
             const mainPost = AppState.posts.find(p => p.id === postId);
             if (mainPost) {
                 mainPost.status = post.status;
@@ -8044,6 +8266,7 @@
             showNotification(`Publication ${post.status === 'active' ? 'affichée' : 'masquée'}`, 'success');
             loadAdminPosts();
             renderPosts();
+            renderRecentPosts();
         }
 
         function deleteDriver(driverId) {
@@ -8066,6 +8289,17 @@
                 showNotification('Publication supprimée', 'success');
                 loadAdminPosts();
                 renderPosts();
+                renderRecentPosts();
+                updateAdminStats();
+            }
+        }
+
+        function deleteMessage(messageId) {
+            if (confirm('Voulez-vous vraiment supprimer ce message ?')) {
+                AppState.adminData.messages = AppState.adminData.messages.filter(m => m.id !== messageId);
+                
+                showNotification('Message supprimé', 'success');
+                loadAdminMessages();
                 updateAdminStats();
             }
         }
@@ -8078,13 +8312,16 @@
             showNotification('Fonctionnalité en développement', 'info');
         }
 
+        function viewMessage(messageId) {
+            showNotification('Fonctionnalité en développement', 'info');
+        }
+
         function completeOrder(orderId) {
             const order = AppState.adminData.orders.find(o => o.id === orderId);
             if (!order) return;
             
             order.status = 'completed';
             
-            // Mettre à jour dans AppState.orders aussi
             const mainOrder = AppState.orders.find(o => o.id === orderId);
             if (mainOrder) {
                 mainOrder.status = 'completed';
@@ -8101,7 +8338,6 @@
             
             order.status = 'cancelled';
             
-            // Mettre à jour dans AppState.orders aussi
             const mainOrder = AppState.orders.find(o => o.id === orderId);
             if (mainOrder) {
                 mainOrder.status = 'cancelled';
@@ -8148,33 +8384,27 @@
                 followBtn.classList.remove('btn-primary');
                 followBtn.classList.add('btn-success');
             } else {
-                followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Suivre';
+                followBtn.innerHTML = '<i class="fas fa-user-plus"></i> S\'abonner';
                 followBtn.classList.remove('btn-success');
                 followBtn.classList.add('btn-primary');
             }
             
-            // Stocker l'ID de l'utilisateur dans le modal
-            document.getElementById('user-profile-modal').dataset.userId = userId;
             document.getElementById('user-profile-modal').classList.remove('hidden');
         }
 
         function toggleFollow() {
-            const modal = document.getElementById('user-profile-modal');
-            if (!modal.classList.contains('hidden')) {
-                const userId = parseInt(modal.dataset.userId);
-                const user = AppState.users.find(u => u.id === userId);
-                if (!user) return;
-                
-                user.isFollowing = !user.isFollowing;
-                user.followers += user.isFollowing ? 1 : -1;
-                
-                if (AppState.currentUser) {
-                    AppState.currentUser.following += user.isFollowing ? 1 : -1;
-                }
-                
-                showUserProfile(user.id);
-                showNotification(user.isFollowing ? 'Abonnement réussi!' : 'Désabonnement réussi!', 'success');
+            const user = AppState.users.find(u => u.id === AppState.users[0].id);
+            if (!user) return;
+            
+            user.isFollowing = !user.isFollowing;
+            user.followers += user.isFollowing ? 1 : -1;
+            
+            if (AppState.currentUser) {
+                AppState.currentUser.following += user.isFollowing ? 1 : -1;
             }
+            
+            showUserProfile(user.id);
+            showNotification(user.isFollowing ? 'Abonnement réussi!' : 'Désabonnement réussi!', 'success');
         }
 
         function reportPost(postId) {
@@ -8213,16 +8443,36 @@
         // ===== INITIAL SHOP SETUP =====
         function initializeShop() {
             calculateDeliveryPrice();
-            
-            // Ajouter un écouteur pour afficher les champs partenaires
-            document.addEventListener('change', function(e) {
-                if (e.target && e.target.id === 'product-category') {
-                    const partnerFields = document.getElementById('partner-fields');
-                    if (partnerFields) {
-                        partnerFields.style.display = e.target.value === 'partners' ? 'block' : 'none';
-                    }
+        }
+
+        // ===== OLD MESSAGES FUNCTIONS =====
+        function simulateMessages() {
+            AppState.messages = [
+                {
+                    id: 1,
+                    sender: 'driver',
+                    name: 'Jean Rakoto',
+                    text: 'Bonjour ! Je suis en route. Je serai là dans 5 minutes.',
+                    time: '10:25',
+                    avatar: '👨'
+                },
+                {
+                    id: 2,
+                    sender: 'user',
+                    name: 'Vous',
+                    text: 'Parfait, je vous attends devant l\'entrée principale.',
+                    time: '10:26',
+                    avatar: '👤'
+                },
+                {
+                    id: 3,
+                    sender: 'driver',
+                    name: 'Jean Rakoto',
+                    text: 'Je viens d\'arriver. Je suis dans une Toyota blanche.',
+                    time: '10:30',
+                    avatar: '👨'
                 }
-            });
+            ];
         }
 
         function callDriver() {
@@ -8263,8 +8513,7 @@
             document.body.style.height = '100%';
         }
 
-        // Initialiser l'application
         initializeApp();
     </script>
 </body>
-    </html>
+</html>
